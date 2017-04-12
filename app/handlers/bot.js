@@ -4,6 +4,7 @@ if (!process.env.slack_bot_token) {
     console.log('Error: Specify token in environment')
     process.exit(1)
 }
+
 const listener = Botkit.slackbot({
     debug: false,
     stats_optout: false
@@ -73,12 +74,7 @@ const startVacationRequestConversation = (user) => {
   })
 }
 
-const setupVacationStatus = () => {
-  console.log('Setting up the vacation status')
-}
-
 export {
   listener,
-  startVacationRequestConversation,
-  setupVacationStatus
+  startVacationRequestConversation
 }

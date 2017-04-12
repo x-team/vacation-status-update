@@ -1,15 +1,16 @@
 import express from 'express'
-import * as botHandler from '../handlers/bot'
+import * as apiHandler from '../handlers/api'
 
 const router = new express.Router()
 const START_VACATION = 'start-vacation'
 
 router.post('/slash', async function (req, res) {
   const action = req.body.text
+  const userId = req.body.user_id
   const command = action.match(/^test\:(.*)/i)
   switch (command[1]) {
     case START_VACATION:
-      botHandler.setupVacationStatus()
+      apiHandler.changeUserProfile(userId)
       res.send('Testing')
       break
     default:
