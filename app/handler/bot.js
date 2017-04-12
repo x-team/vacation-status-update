@@ -15,7 +15,7 @@ const bot = listener.spawn({
 
 const startVacationRequestConversation = (user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
-    convo.addQuestion('Noice! And when are you back at X-Team?',[
+    convo.addQuestion('Groovy. And what day will you be back?',[
       {
         default: true,
         callback: function(response,convo) {
@@ -25,7 +25,7 @@ const startVacationRequestConversation = (user) => {
       }
     ],{},'end_vacation')
 
-    convo.addQuestion('Great! What time shall your vacation start ?',[
+    convo.addQuestion('Lucky! I\'m dying for a weekend getaway. Well, I can remind the team about your vacation for you once you\'re gone. What day will your vacation start?',[
       {
         default: true,
         callback: function(response,convo) {
@@ -36,19 +36,19 @@ const startVacationRequestConversation = (user) => {
     ],{},'yes_thread')
 
     convo.addMessage({
-        text: 'Right ... Sorry! Must have missheard something. Pleas don\'t tell my boss...',
+        text: 'Oh, nevermind then. Well, anyway, my yacht is pulling up -- Hamptons here I come, baby! :sunglasses:',
     },'no_thread')
 
     convo.addMessage({
-        text: 'Thanks! Seems like your vacation will take place between {{vars.vacation_start}} and {{vars.vacation_end}}.',
+        text: 'Bingo! Got it. I will remind the team that your vacation will take place between {{vars.vacation_start}} and {{vars.vacation_end}}.',
     },'thanks')
 
     convo.addMessage({
-        text: 'Sorry I did not understand.',
+        text: 'Can you rephrase?',
         action: 'default',
     },'bad_response')
 
-    convo.ask('I can\'t help to notice that you have mentioned something about vacation ... Is that correct?', [
+    convo.ask('Heya! Bernie here, did I hear you say you\'re going on vacation?', [
         {
             pattern: bot.utterances.yes,
             callback: (response, convo) => {
