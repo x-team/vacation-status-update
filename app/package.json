@@ -9,7 +9,8 @@
     "botkit": "^0.4.10",
     "body-parser": "^1.15.2",
     "express": "^4.15.2",
-    "firebase": "^3.7.3"
+    "firebase": "^3.7.3",
+    "localtunnel": "^1.8.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

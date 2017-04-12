@@ -10,3 +10,5 @@ services:
     entrypoint: npm start
     environment:
       - slack_bot_token=${slack_bot_token}
+      - slack_api_token=${slack_api_token}
+      - localtunnel_subdomain=${localtunnel_subdomain}
