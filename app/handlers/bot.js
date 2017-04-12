@@ -73,7 +73,12 @@ const startVacationRequestConversation = (user) => {
   })
 }
 
+const setupVacationStatus = () => {
+  console.log('Setting up the vacation status')
+}
+
 export {
   listener,
-  startVacationRequestConversation
+  startVacationRequestConversation,
+  setupVacationStatus
 }
