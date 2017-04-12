@@ -13,6 +13,20 @@ const bot = listener.spawn({
     token: process.env.slack_bot_token
 }).startRTM()
 
+const sendInteractiveQuestion = () => {
+
+}
+
+const changeUserStatus = (user) => {
+  bot.api.users.profile.set({
+    token: process.env.slack_api_token,
+    user: user,
+    profile: {family_name:'OOO from x to y'}
+  }, (err,response) => {
+    console.log('api call response', response)
+  })
+}
+
 const startVacationRequestConversation = (user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
     convo.addQuestion('Groovy. And what day will you be back?',[
