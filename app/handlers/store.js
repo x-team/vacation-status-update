@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import * as formatterUtil from '../util/formatter'
+import * as dateUtil from '../util/date'
 
 const VACATION_START = 'start'
 const VACATION_END = 'end'
@@ -41,18 +42,44 @@ const storeVacationInfo = (userId, userData, startDate, endDate) => {
 }
 
 const checkVacationStartToday = () => {
-  // fetch from storage collection of users from today that
-  return [{userId: 'U1XDNKJ0J'}]
+  return new Promise((resolve, reject) => {
+    const dateToday = dateUtil.getTodayDateObject()
+    const ref = `${VACATION_DATES_ENDPOINT}/${dateToday.year}/${dateToday.month}/${dateToday.day}/${VACATION_START}`
+    const vacationDetails = firebase.database().ref(ref)
+      vacationDetails.once('value', (snapshot) => {
+        let users = []
+        const snaps = snapshot.val()
+        for (var key in snaps) {
+          if (snaps.hasOwnProperty(key)) {
+            users.push({userId: key})
+          }
+        }
+        resolve(users)
+    })
+  })
 }
 
 const checkVacationEndToday = () => {
-  // fetch from storage collection of users from today that
-  return [{userId: 'U1XDNKJ0J'}]
+  return new Promise((resolve, reject) => {
+    const dateToday = dateUtil.getTodayDateObject()
+    const ref = `${VACATION_DATES_ENDPOINT}/${dateToday.year}/${dateToday.month}/${dateToday.day}/${VACATION_END}`
+    const vacationDetails = firebase.database().ref(ref)
+      vacationDetails.once('value', (snapshot) => {
+        let users = []
+        const snaps = snapshot.val()
+        for (var key in snaps) {
+          if (snaps.hasOwnProperty(key)) {
+            users.push({userId: key})
+          }
+        }
+        resolve(users)
+    })
+  })
 }
 
 const getVacationDetails = (userId) => {
   return new Promise((resolve, reject) => {
-    const vacationDetails = firebase.database().ref(`users/${userId}`)
+    const vacationDetails = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}`)
       vacationDetails.on('value', (snapshot) => {
         resolve(snapshot.val())
     })
