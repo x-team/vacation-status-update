@@ -3,6 +3,7 @@ import localtunnel from 'localtunnel'
 import express from 'express'
 import router from './controllers'
 import * as botHandler from './handlers/bot'
+import * as cronUtil from './util/cron'
 
 const port = process.env.PORT || 3000
 
@@ -28,3 +29,6 @@ if (!process.env.is_prod) {
 app.get('/', async function (req, res) {
   res.send('Hello')
 })
+
+cronUtil.startVacationStartCheckJob()
+cronUtil.startVacationEndCheckJob()
