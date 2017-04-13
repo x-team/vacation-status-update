@@ -20,13 +20,7 @@ const guessDate = (dateFromAnswerValidated) => {
   return { day: day, month: month, year:year, fancy:date.toDateString()}
 }
 
-const getStartDateFromAnswer = (answer) => {
-  // for now
-  return getTodayDateObject()
-}
-
 export {
-  getStartDateFromAnswer,
   getTodayDateObject,
   validate,
   guessDate

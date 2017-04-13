@@ -117,8 +117,7 @@ const startVacationRequestConversation = (user) => {
     },'bad_response')
 
     convo.addMessage({
-        text: 'Thanks!',
-        action: 'default',
+        text: 'Thanks!'
     },'end')
 
     convo.ask('Heya! Bernie here, did I hear you say you\'re going on vacation?', [

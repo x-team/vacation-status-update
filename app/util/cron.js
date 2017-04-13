@@ -1,8 +1,8 @@
 import cron from 'node-cron'
 import * as storeHandler from '../handlers/store'
 import * as vacationManager from '../manager/vacation'
-const START_VACATION_CRON_INTERVAL = '*/30 * * * * *'
-const END_VACATION_CRON_INTERVAL = '*/30 * * * * *'
+const START_VACATION_CRON_INTERVAL = '*/15 * * * * *'
+const END_VACATION_CRON_INTERVAL = '* * * * *'
 
 const startVacationStartCheckJob = () => {
   cron.schedule(START_VACATION_CRON_INTERVAL, async function() {
