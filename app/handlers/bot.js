@@ -19,7 +19,7 @@ const bot = listener.spawn({
 
 const startVacationRequestConversation = (user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
-    convo.addQuestion('Groovy. And what day will you be back?',[
+    convo.addQuestion('Awesome. And what day will you be back?',[
       {
         default: true,
         callback: function(response, convo) {
@@ -29,7 +29,7 @@ const startVacationRequestConversation = (user) => {
       }
     ],{},'end_vacation')
 
-    convo.addQuestion('Lucky! I\'m dying for a weekend getaway. Well, I can remind the team about your vacation for you once you\'re gone. What day will your vacation start?',[
+    convo.addQuestion('Noice! Well, I can remind the team about your vacation for you once you\'re gone. What day will your vacation start?',[
       {
         default: true,
         callback: (response, convo) => {
@@ -40,10 +40,10 @@ const startVacationRequestConversation = (user) => {
     ],{},'yes_thread')
 
     convo.addMessage({
-        text: 'Oh, nevermind then. Well, anyway, my yacht is pulling up -- Hamptons here I come, baby! :sunglasses:',
+        text: 'Oh, got it :slightly_smiling_face: Just a heads up, you can always message me when you set your vacation plans, and I will update your profile name for you so people know you are away when they try to message you :slightly_smiling_face: ',
     },'no_thread')
 
-    convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.vacation_start}} and {{vars.vacation_end}}. Is that alright?', [
+    convo.addQuestion('Got it. So then, your vacation is between {{vars.vacation_start}} and {{vars.vacation_end}}. I will update your profile name with OOO when you leave so the team knows you are not available. Is that alright?', [
       {
           pattern: bot.utterances.yes,
           callback: async function(response, convo) {
@@ -60,7 +60,7 @@ const startVacationRequestConversation = (user) => {
         action: 'default',
     },'bad_response')
 
-    convo.ask('Heya! Bernie here, did I hear you say you\'re going on vacation?', [
+    convo.ask('Hey there! Did I hear you say you\'re going on vacation?', [
         {
             pattern: bot.utterances.yes,
             callback: (response, convo) => {
