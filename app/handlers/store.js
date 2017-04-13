@@ -29,7 +29,7 @@ const storeVacationEnd = (date, userId) => {
 
 const storeVacationDetails = (userId, startDate, endDate, lastName, status) => {
   const data = {user: userId, startDate: startDate, endDate: endDate, lastName: lastName, status: status}
-  const ref = `${VACATION_USER_DETAILS}/${userId}/${startDate.year}${startDate.month}${startDate.day}${endDate.year}${endDate.month}${endDate.day}`
+  const ref = `${VACATION_USER_DETAILS}/${userId}/0`
   firebase.database().ref(ref).set(data)
 }
 
@@ -40,6 +40,42 @@ const storeVacationInfo = (userId, userData, startDate, endDate) => {
   storeVacationDetails(userId, startDate, endDate, userData.last_name, status)
 }
 
+const checkVacationStartToday = () => {
+  // fetch from storage collection of users from today that
+  return [{userId: 'U1XDNKJ0J'}]
+}
+
+const checkVacationEndToday = () => {
+  // fetch from storage collection of users from today that
+  return [{userId: 'U1XDNKJ0J'}]
+}
+
+const getVacationDetails = (userId) => {
+  return new Promise((resolve, reject) => {
+    const vacationDetails = firebase.database().ref(`users/${userId}`)
+      vacationDetails.on('value', (snapshot) => {
+        resolve(snapshot.val())
+    })
+  })
+}
+
+const setVacationDetailsStarted = (userId, vacationDetails) => {
+  vacationDetails.vacationStarted = true
+  const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+  firebase.database().ref(ref).set(vacationDetails)
+}
+
+const setVacationDetailsEnded = (userId, vacationDetails) => {
+  vacationDetails.vacationEnded = true
+  const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+  firebase.database().ref(ref).set(vacationDetails)
+}
+
 export {
-  storeVacationInfo
+  storeVacationInfo,
+  checkVacationStartToday,
+  checkVacationEndToday,
+  getVacationDetails,
+  setVacationDetailsStarted,
+  setVacationDetailsEnded
 }
