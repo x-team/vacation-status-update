@@ -41,5 +41,7 @@ const storeVacationInfo = (userId, userData, startDate, endDate) => {
 }
 
 export {
-  storeVacationInfo
+  storeVacationStart,
+  storeVacationEnd,
+  storeVacationDetails
 }
