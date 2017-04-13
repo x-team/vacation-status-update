@@ -1,4 +1,7 @@
 import Botkit from 'botkit'
+import * as storeHandler from './store'
+import * as apiHandler from '../handlers/api'
+import * as dateUtil from '../util/date'
 
 if (!process.env.slack_bot_token) {
     console.log('Error: Specify token in environment')
@@ -19,7 +22,7 @@ const startVacationRequestConversation = (user) => {
     convo.addQuestion('Groovy. And what day will you be back?',[
       {
         default: true,
-        callback: function(response,convo) {
+        callback: function(response, convo) {
           convo.setVar('vacation_end', response.text);
           convo.gotoThread('thanks')
         }
@@ -29,7 +32,7 @@ const startVacationRequestConversation = (user) => {
     convo.addQuestion('Lucky! I\'m dying for a weekend getaway. Well, I can remind the team about your vacation for you once you\'re gone. What day will your vacation start?',[
       {
         default: true,
-        callback: function(response,convo) {
+        callback: (response, convo) => {
           convo.setVar('vacation_start', response.text)
           convo.gotoThread('end_vacation')
         }
@@ -40,9 +43,17 @@ const startVacationRequestConversation = (user) => {
         text: 'Oh, nevermind then. Well, anyway, my yacht is pulling up -- Hamptons here I come, baby! :sunglasses:',
     },'no_thread')
 
-    convo.addMessage({
-        text: 'Bingo! Got it. I will remind the team that your vacation will take place between {{vars.vacation_start}} and {{vars.vacation_end}}.',
-    },'thanks')
+    convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.vacation_start}} and {{vars.vacation_end}}. Is that alright?', [
+      {
+          pattern: bot.utterances.yes,
+          callback: async function(response, convo) {
+            let userData = await apiHandler.getUserData(response.user)
+            const startDate = dateUtil.getStartDateFromAnswer(convo.vars.vacation_start)
+            const endDate = dateUtil.getStartDateFromAnswer(convo.vars.vacation_end)
+            storeHandler.storeVacationInfo(response.user, userData, startDate, endDate)
+          }
+      }
+    ],{},'thanks')
 
     convo.addMessage({
         text: 'Can you rephrase?',

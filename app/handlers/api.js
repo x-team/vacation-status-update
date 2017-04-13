@@ -7,6 +7,19 @@ const changeUserProfile = (userId) => {
   })
 }
 
+const getUserData = (userId) => {
+  return new Promise((resolve, reject) => {
+    slackClient.api('users.info', {user: userId}, (err, response) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(response.user.profile)
+      }
+    })
+  })
+}
+
 export {
-  changeUserProfile
+  changeUserProfile,
+  getUserData
 }
