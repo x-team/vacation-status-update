@@ -15,11 +15,8 @@ router.post('/slash', async function (req, res) {
     case START_VACATION:
       const startDate = dateUtil.getTodayDateObject()
       const endDate = dateUtil.getTodayDateObject()
-      const status = `${userData.last_name} [ OOO ${startDate.day}/${startDate.month} to ${endDate.day}/${endDate.month} ]`
-      storeHandler.storeVacationStart(startDate, userId)
-      storeHandler.storeVacationEnd(endDate, userId)
-      storeHandler.storeVacationDetails(userId, startDate, endDate, userData.last_name, status)
-      res.send(`Stored vacation data ${status}`)
+      storeHandler.storeVacationInfo(userId, userData, startDate, endDate)
+      res.send('OK')
       break
     default:
       res.send('Please provide arguments')

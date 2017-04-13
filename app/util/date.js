@@ -6,3 +6,8 @@ export const getTodayDateObject = () => {
 
   return {year: year, month: month, day: day}
 }
+
+export const getStartDateFromAnswer = (answer) => {
+  // for now
+  return getTodayDateObject()
+}

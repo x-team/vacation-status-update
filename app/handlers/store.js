@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import * as formatterUtil from '../util/formatter'
 
 const VACATION_START = 'start'
 const VACATION_END = 'end'
@@ -32,8 +33,13 @@ const storeVacationDetails = (userId, startDate, endDate, lastName, status) => {
   firebase.database().ref(ref).set(data)
 }
 
+const storeVacationInfo = (userId, userData, startDate, endDate) => {
+  const status = formatterUtil.formatStatus(userData.last_name, startDate, endDate)
+  storeVacationStart(startDate, userId)
+  storeVacationEnd(endDate, userId)
+  storeVacationDetails(userId, startDate, endDate, userData.last_name, status)
+}
+
 export {
-  storeVacationStart,
-  storeVacationEnd,
-  storeVacationDetails
+  storeVacationInfo
 }
