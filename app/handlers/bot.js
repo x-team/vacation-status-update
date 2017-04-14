@@ -41,7 +41,7 @@ const handleEndtDateAnswer = (response, convo) => {
 
 const startVacationRequestConversation = (user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
-    convo.addQuestion('Groovy. And what day will you be back?',[
+    convo.addQuestion('Awesome. And what day will you be back? (Use dd/mm/yyyy again)',[
       {
         default: true,
         callback: (response, convo) => { handleEndtDateAnswer(response, convo) }
@@ -80,7 +80,7 @@ const startVacationRequestConversation = (user) => {
       }
     ],{},'confirm_end_date')
 
-    convo.addQuestion('Please provide date in format dd/mm/yyyy',[
+    convo.addQuestion('Please provide the date in format dd/mm/yyyy (sorry, my boss is a stickler)',[
       {
         default: true,
         callback: (response, convo) => {
@@ -89,7 +89,7 @@ const startVacationRequestConversation = (user) => {
       }
     ],{},'remind_date_format')
 
-    convo.addQuestion('Lucky! I\'m dying for a weekend getaway. Well, I can remind the team about your vacation for you once you\'re gone. What day will your vacation start? (format: dd/mm/yyyy)',[
+    convo.addQuestion('Noice! I can update your profile name for you on the day you leave so you don\'t forget. What day will your vacation start? (Use the format: dd/mm/yyyy)',[
       {
         default: true,
         callback: (response, convo) => { handleStartDateAnswer(response, convo) }
@@ -97,10 +97,10 @@ const startVacationRequestConversation = (user) => {
     ],{},'yes_thread')
 
     convo.addMessage({
-        text: 'Oh, nevermind then. Well, anyway, my yacht is pulling up -- Hamptons here I come, baby! :sunglasses:',
+        text: 'Oh, ok :slightly_smiling_face: Thought I\'d check just in case! Just a heads up, you can always message me when you set your vacation plans, and I will update your profile name for you so people know you are away when they try to message you :slightly_smiling_face:',
     },'no_thread')
 
-    convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.startDate.fancy}} and {{vars.endDate.fancy}}. Is that correct?', [
+    convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.startDate.fancy}} and {{vars.endDate.fancy}}.', [
       {
           pattern: bot.utterances.yes,
           callback: async function(response, convo) {
