@@ -120,7 +120,7 @@ const startVacationRequestConversation = (user) => {
         text: 'Thanks!'
     },'end')
 
-    convo.ask('Heya! Bernie here, did I hear you say you\'re going on vacation?', [
+    convo.ask('Heya! VacationBot here, did I hear you say you\'re going on vacation?', [
         {
             pattern: bot.utterances.yes,
             callback: (response, convo) => {
