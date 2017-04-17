@@ -24,18 +24,18 @@ const handleStartDateAnswer = (response, convo) => {
     convo.setVar('startDate', startDate)
     convo.gotoThread('confirm_start_date')
   } else {
-    convo.gotoThread('remind_date_format')
+    convo.gotoThread('remind_start_date_format')
   }
 }
 
-const handleEndtDateAnswer = (response, convo) => {
+const handleEndDateAnswer = (response, convo) => {
   const isValidDate = dateUtil.validate(response.text)
   if (isValidDate) {
     const endDate = dateUtil.guessDate(response.text)
     convo.setVar('endDate', endDate)
     convo.gotoThread('confirm_end_date')
   } else {
-    convo.gotoThread('remind_date_format')
+    convo.gotoThread('remind_end_date_format')
   }
 }
 
@@ -44,7 +44,7 @@ const startVacationRequestConversation = (user) => {
     convo.addQuestion('Awesome. And what day will you be back? (Use dd/mm/yyyy again)',[
       {
         default: true,
-        callback: (response, convo) => { handleEndtDateAnswer(response, convo) }
+        callback: (response, convo) => { handleEndDateAnswer(response, convo) }
       }
     ],{},'end_vacation')
 
@@ -58,6 +58,7 @@ const startVacationRequestConversation = (user) => {
       {
           pattern: bot.utterances.no,
           callback: (response, convo) => {
+            convo.gotoThread('try_providing_start_date_again')
           }
       }
     ],{},'confirm_start_date')
@@ -66,23 +67,59 @@ const startVacationRequestConversation = (user) => {
       {
           pattern: bot.utterances.yes,
           callback: (response, convo) => {
-              convo.gotoThread('thanks')
+            convo.gotoThread('thanks')
           }
       },
       {
           pattern: bot.utterances.no,
           callback: (response, convo) => {
+            convo.gotoThread('try_providing_end_date_again')
           }
       }
     ],{},'confirm_end_date')
 
+    convo.addQuestion(`Do you want to try again?`, [
+      {
+          pattern: bot.utterances.yes,
+          callback: (response, convo) => {
+            convo.gotoThread('yes_thread')
+          }
+      },
+      {
+          pattern: bot.utterances.no,
+          callback: (response, convo) => {
+            convo.gotoThread('end')
+          }
+      }
+    ],{},'do_you_want_to_try_again')
+
     convo.addQuestion('Please provide the date in format dd/mm/yyyy (sorry, my boss is a stickler)',[
       {
         default: true,
-        callback: (response, convo) => {
-        }
+        callback: (response, convo) => { handleStartDateAnswer(response, convo) }
       }
-    ],{},'remind_date_format')
+    ],{},'remind_start_date_format')
+
+    convo.addQuestion('Please provide the date in format dd/mm/yyyy (sorry, my boss is a stickler)',[
+      {
+        default: true,
+        callback: (response, convo) => { handleEndDateAnswer(response, convo) }
+      }
+    ],{},'remind_end_date_format')
+
+    convo.addQuestion('Ok, let\'s try it again then. Please provide the start date in format dd/mm/yyyy',[
+      {
+        default: true,
+        callback: (response, convo) => { handleStartDateAnswer(response, convo) }
+      }
+    ],{},'try_providing_start_date_again')
+
+    convo.addQuestion('Ok, let\'s try it again then. Please provide the end date in format dd/mm/yyyy',[
+      {
+        default: true,
+        callback: (response, convo) => { handleEndDateAnswer(response, convo) }
+      }
+    ],{},'try_providing_end_date_again')
 
     convo.addQuestion('Noice! I can update your Slack status (with a nice emoji) for you on the day you leave so you don\'t forget. What day will your vacation start? (Use the format: dd/mm/yyyy)',[
       {
@@ -97,12 +134,18 @@ const startVacationRequestConversation = (user) => {
 
     convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.startDate.fancy}} and {{vars.endDate.fancy}}. Is that alright?', [
       {
-          pattern: bot.utterances.yes,
-          callback: async function(response, convo) {
-            let userData = await apiHandler.getUserData(response.user)
-            storeHandler.storeVacationInfo(response.user, userData, convo.vars.startDate, convo.vars.endDate)
-            convo.gotoThread('end')
-          }
+        pattern: bot.utterances.yes,
+        callback: async function(response, convo) {
+          let userData = await apiHandler.getUserData(response.user)
+          storeHandler.storeVacationInfo(response.user, userData, convo.vars.startDate, convo.vars.endDate)
+          convo.gotoThread('end')
+        }
+      },
+      {
+        pattern: bot.utterances.no,
+        callback: (response, convo) => {
+          convo.gotoThread('do_you_want_to_try_again')
+        }
       }
     ],{},'thanks')
 
