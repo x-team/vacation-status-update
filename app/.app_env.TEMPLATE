@@ -1,0 +1,8 @@
+firebase_config_apikey=xxx
+firebase_config_authdomain=xxx
+firebase_config_databaseurl=xxx
+firebase_config_messagingsenderid=xxx
+firebase_config_storagebucket=xxx
+firebase_config_projectid=xxx
+slack_api_token=xxx
+slack_bot_token=xxx
