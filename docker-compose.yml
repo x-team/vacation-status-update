@@ -4,10 +4,8 @@ services:
     container_name: node
     image: node:7
     volumes:
-      - ./app:/src/app
+      - .:/src/app
     ports:
       - 80:3000
     working_dir: /src/app
     entrypoint: npm start
-    env_file:
-      - ./app/.app_env
