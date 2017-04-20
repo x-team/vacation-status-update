@@ -2,18 +2,12 @@ version: '3'
 services:
   node:
     container_name: node
-    build: .
+    image: node:7
     volumes:
-      - "./app:/src/app"
+      - ./app:/src/app
     ports:
       - 80:3000
+    working_dir: /src/app
     entrypoint: npm start
-    environment:
-      - slack_bot_token=${slack_bot_token}
-      - slack_api_token=${slack_api_token}
-      - firebase_config_apikey=${firebase_config_apikey}
-      - firebase_config_authdomain=${firebase_config_authdomain}
-      - firebase_config_databaseurl=${firebase_config_databaseurl}
-      - firebase_config_storagebucket=${firebase_config_storagebucket}
-      - firebase_config_messagingsenderid=${firebase_config_messagingsenderid}
-      - localtunnel_subdomain=${localtunnel_subdomain}
+    env_file:
+      - ./app/.app_env
