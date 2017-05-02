@@ -15,7 +15,7 @@ app.use('/api', router)
 app.listen(port)
 
 botHandler.listener.hears(['vacation', 'holiday', 'ooo', 'time off'], ['ambient'], (bot, message) => {
-  botHandler.startVacationRequestConversation(message.user)
+  botHandler.startVacationRequestConversation(bot, message.user)
 })
 
 cronUtil.startVacationStartCheckJob()

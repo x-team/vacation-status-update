@@ -3,19 +3,14 @@ import * as storeHandler from './store'
 import * as apiHandler from '../handlers/api'
 import * as dateUtil from '../util/date'
 
-if (!process.env.slack_bot_token) {
-    console.log('Error: Specify token in environment')
-    process.exit(1)
-}
-
 const listener = Botkit.slackbot({
     debug: false,
     stats_optout: false
 });
 
-const bot = listener.spawn({
-    token: process.env.slack_bot_token
-}).startRTM()
+const createNewBotConnection = (token) => {
+  return listener.spawn({ token }).startRTM()
+}
 
 const handleStartDateAnswer = (response, convo) => {
   const isValidDate = dateUtil.validate(response.text)
@@ -39,7 +34,7 @@ const handleEndDateAnswer = (response, convo) => {
   }
 }
 
-const startVacationRequestConversation = (user) => {
+const startVacationRequestConversation = (bot, user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
     convo.addQuestion('Awesome. And what day will you be back? (Use dd/mm/yyyy again)',[
       {
@@ -185,5 +180,6 @@ const startVacationRequestConversation = (user) => {
 
 export {
   listener,
-  startVacationRequestConversation
+  startVacationRequestConversation,
+  createNewBotConnection
 }

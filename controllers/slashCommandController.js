@@ -15,7 +15,7 @@ router.post('/slash', async function (req, res) {
     case START_VACATION:
       const startDate = dateUtil.getTodayDateObject()
       const endDate = dateUtil.getTodayDateObject()
-      storeHandler.storeVacationInfo(userId, userData, startDate, endDate)
+      storeHandler.storeVacationInfo(userId, startDate, endDate)
       res.send('OK')
       break
     default:

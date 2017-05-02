@@ -27,7 +27,27 @@ const getUserData = (userId) => {
   })
 }
 
+const exchangeCodeForToken = (code) => {
+  return new Promise((resolve, reject) => {
+    const data = {
+      client_id: process.env.slack_app_client_id,
+      client_secret: process.env.slack_app_client_secret,
+      code,
+      redirect_uri: process.env.slack_app_redirect_uri,
+    }
+
+    slackClient.api('oauth.access', data, (err, response) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(response.bot.bot_access_token)
+      }
+    })
+  })
+}
+
 export {
   changeUserProfile,
-  getUserData
+  getUserData,
+  exchangeCodeForToken
 }

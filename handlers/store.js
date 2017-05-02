@@ -30,16 +30,16 @@ const storeVacationEnd = (date, userId) => {
 }
 
 const storeVacationDetails = (userId, startDate, endDate, lastName, status) => {
-  const data = {user: userId, startDate: startDate, endDate: endDate, lastName: lastName, status: status}
+  const data = {user: userId, startDate: startDate, endDate: endDate, status: status}
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
   firebase.database().ref(ref).set(data)
 }
 
-const storeVacationInfo = (userId, userData, startDate, endDate) => {
-  const status = formatterUtil.formatStatus(userData.last_name, startDate, endDate)
+const storeVacationInfo = (userId, startDate, endDate) => {
+  const status = formatterUtil.formatStatus(endDate)
   storeVacationStart(startDate, userId)
   storeVacationEnd(endDate, userId)
-  storeVacationDetails(userId, startDate, endDate, userData.last_name, status)
+  storeVacationDetails(userId, startDate, endDate, status)
 }
 
 const checkVacationStartToday = () => {
