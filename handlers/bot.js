@@ -12,6 +12,12 @@ const createNewBotConnection = (token) => {
   return listener.spawn({ token }).startRTM()
 }
 
+const resumeAllConnections = (tokens) => {
+  for ( const key in tokens ) {
+    const bot = createNewBotConnection(tokens[key])
+  }
+}
+
 const handleStartDateAnswer = (response, convo) => {
   const isValidDate = dateUtil.validate(response.text)
   if (isValidDate) {
@@ -181,5 +187,6 @@ const startVacationRequestConversation = (bot, user) => {
 export {
   listener,
   startVacationRequestConversation,
-  createNewBotConnection
+  createNewBotConnection,
+  resumeAllConnections
 }

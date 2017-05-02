@@ -45,9 +45,25 @@ const storeVacationInfo = (userId, startDate, endDate) => {
 
 const storeTeamToken = (token) => {
   const botData = { botToken: token.bot.bot_access_token, botUserId: token.bot.bot_user_id }
-  const data = { teamId: token.team_id, bot: botData }
+  const data = { teamId: token.team_id, bot: botData, token: token.access_token }
   const ref = `${VACATION_TOKENS}/${token.team_id}`
   firebase.database().ref(ref).set(data)
+}
+
+const getAllTokens = () => {
+  return new Promise((resolve, reject) => {
+    const teamsTokens = firebase.database().ref(VACATION_TOKENS)
+      teamsTokens.once('value', (snapshot) => {
+        let tokens = []
+        const snaps = snapshot.val()
+        for (var key in snaps) {
+          if (snaps.hasOwnProperty(key)) {
+            tokens.push(snaps[key].bot.botToken)
+          }
+        }
+        resolve(tokens)
+    })
+  })
 }
 
 const checkVacationStartToday = () => {
@@ -114,5 +130,6 @@ export {
   getVacationDetails,
   setVacationDetailsStarted,
   setVacationDetailsEnded,
-  storeTeamToken
+  storeTeamToken,
+  getAllTokens
 }
