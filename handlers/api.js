@@ -40,7 +40,7 @@ const exchangeCodeForToken = (code) => {
       if (err) {
         reject(err)
       } else {
-        resolve(response.bot.bot_access_token)
+        resolve(response)
       }
     })
   })

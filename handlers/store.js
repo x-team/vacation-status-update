@@ -6,6 +6,7 @@ const VACATION_START = 'start'
 const VACATION_END = 'end'
 const VACATION_DATES_ENDPOINT = 'dates'
 const VACATION_USER_DETAILS = 'users'
+const VACATION_TOKENS = 'tokens'
 const config = {
   apiKey: process.env.firebase_config_apikey,
   authDomain: process.env.firebase_config_authdomain,
@@ -40,6 +41,13 @@ const storeVacationInfo = (userId, startDate, endDate) => {
   storeVacationStart(startDate, userId)
   storeVacationEnd(endDate, userId)
   storeVacationDetails(userId, startDate, endDate, status)
+}
+
+const storeTeamToken = (token) => {
+  const botData = { botToken: token.bot.bot_access_token, botUserId: token.bot.bot_user_id }
+  const data = { teamId: token.team_id, bot: botData }
+  const ref = `${VACATION_TOKENS}/${token.team_id}`
+  firebase.database().ref(ref).set(data)
 }
 
 const checkVacationStartToday = () => {
@@ -105,5 +113,6 @@ export {
   checkVacationEndToday,
   getVacationDetails,
   setVacationDetailsStarted,
-  setVacationDetailsEnded
+  setVacationDetailsEnded,
+  storeTeamToken
 }
