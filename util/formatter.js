@@ -1,3 +1,3 @@
-export const formatStatus = (lastName, startDate, endDate) => {
+export const formatStatus = (endDate) => {
   return `OOO until ${endDate.fancy}`
 }
