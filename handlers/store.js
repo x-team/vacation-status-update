@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import * as formatterUtil from '../util/formatter'
 import * as dateUtil from '../util/date'
+import * as apiHandler from './api'
 
 const VACATION_START = 'start'
 const VACATION_END = 'end'
@@ -48,6 +49,13 @@ const storeTeamToken = (token) => {
   const data = { teamId: token.team_id, bot: botData, token: token.access_token }
   const ref = `${VACATION_TOKENS}/${token.team_id}`
   firebase.database().ref(ref).set(data)
+}
+
+const setupDevTeam = async function() {
+  let devBotData = await apiHandler.identifyDevBotData()
+  const botData = { bot_access_token: process.env.slack_bot_token, bot_user_id: devBotData.user_id}
+  const tokenData = { bot: botData, team_id: devBotData.team_id, access_token: process.env.slack_api_token}
+  storeTeamToken(tokenData)
 }
 
 const getTeamApiToken = (teamId) => {
@@ -153,5 +161,6 @@ export {
   storeTeamToken,
   getAllTokens,
   getTeamApiToken,
-  getUserTeamId
+  getUserTeamId,
+  setupDevTeam
 }
