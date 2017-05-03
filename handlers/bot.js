@@ -14,7 +14,7 @@ const createNewBotConnection = (token) => {
 
 const resumeAllConnections = (tokens) => {
   for ( const key in tokens ) {
-    const bot = createNewBotConnection(tokens[key])
+    createNewBotConnection(tokens[key])
   }
 }
 
