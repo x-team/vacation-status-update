@@ -18,6 +18,7 @@ const config = {
 }
 
 const app = firebase.initializeApp(config)
+firebase.auth().signInAnonymously()
 
 const storeVacationStart = (date, userId) => {
   const data = { user: userId, date: date, type: VACATION_START}
