@@ -36,7 +36,7 @@ const exchangeCodeForToken = (code) => {
       code,
       redirect_uri: process.env.slack_app_redirect_uri,
     }
-
+    const slackClient = new slack(process.env.slack_api_token)
     slackClient.api('oauth.access', data, (err, response) => {
       if (err) {
         reject(err)
