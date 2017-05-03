@@ -28,6 +28,19 @@ const getUserData = (token, userId) => {
   })
 }
 
+const identifyDevBotData = () => {
+  return new Promise((resolve, reject) => {
+    const slackClient = new slack(process.env.slack_bot_token)
+    slackClient.api('auth.test', (err, response) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(response)
+      }
+    })
+  })
+}
+
 const exchangeCodeForToken = (code) => {
   return new Promise((resolve, reject) => {
     const data = {
@@ -50,5 +63,6 @@ const exchangeCodeForToken = (code) => {
 export {
   changeUserProfile,
   getUserData,
-  exchangeCodeForToken
+  exchangeCodeForToken,
+  identifyDevBotData,
 }

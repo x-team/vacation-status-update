@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 app.use('/api', router)
 app.listen(port)
 
+storeHandler.setupDevTeam()
 setupTeams()
 
 cronUtil.startVacationStartCheckJob()
