@@ -137,8 +137,7 @@ const startVacationRequestConversation = (bot, user) => {
       {
         pattern: bot.utterances.yes,
         callback: async function(response, convo) {
-          let userData = await apiHandler.getUserData(response.user)
-          storeHandler.storeVacationInfo(response.user, userData, convo.vars.startDate, convo.vars.endDate)
+          storeHandler.storeVacationInfo({userId: response.user, teamId: response.team}, convo.vars.startDate, convo.vars.endDate)
           convo.gotoThread('end')
         }
       },

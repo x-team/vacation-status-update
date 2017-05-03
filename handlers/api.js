@@ -1,10 +1,10 @@
 import slack from 'slack-node'
-const slackClient = new slack(process.env.slack_api_token)
 
-const changeUserProfile = (userId, text, emoji) => {
+const changeUserProfile = (token, userId, text, emoji) => {
   return new Promise((resolve, reject) => {
     const profile = `{"status_text":"${text}","status_emoji": "${emoji}"}`
     const apiCallData = { user: userId, profile: profile}
+    const slackClient = new slack(token)
     slackClient.api('users.profile.set', apiCallData, (err, response) => {
       if (err) {
         reject(err)
@@ -15,8 +15,9 @@ const changeUserProfile = (userId, text, emoji) => {
   })
 }
 
-const getUserData = (userId) => {
+const getUserData = (token, userId) => {
   return new Promise((resolve, reject) => {
+    const slackClient = new slack(token)
     slackClient.api('users.info', {user: userId}, (err, response) => {
       if (err) {
         reject(err)

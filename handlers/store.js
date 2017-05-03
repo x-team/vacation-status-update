@@ -30,17 +30,17 @@ const storeVacationEnd = (date, userId) => {
   firebase.database().ref(ref).set(data)
 }
 
-const storeVacationDetails = (userId, startDate, endDate, lastName, status) => {
-  const data = {user: userId, startDate: startDate, endDate: endDate, status: status}
-  const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+const storeVacationDetails = (userData, startDate, endDate, status) => {
+  const data = {user: userData.userId, team: userData.teamId, startDate: startDate, endDate: endDate, status: status}
+  const ref = `${VACATION_USER_DETAILS}/${userData.userId}/0`
   firebase.database().ref(ref).set(data)
 }
 
-const storeVacationInfo = (userId, startDate, endDate) => {
+const storeVacationInfo = (userData, startDate, endDate) => {
   const status = formatterUtil.formatStatus(endDate)
-  storeVacationStart(startDate, userId)
-  storeVacationEnd(endDate, userId)
-  storeVacationDetails(userId, startDate, endDate, status)
+  storeVacationStart(startDate, userData.userId)
+  storeVacationEnd(endDate, userData.userId)
+  storeVacationDetails(userData, startDate, endDate, status)
 }
 
 const storeTeamToken = (token) => {
@@ -48,6 +48,24 @@ const storeTeamToken = (token) => {
   const data = { teamId: token.team_id, bot: botData, token: token.access_token }
   const ref = `${VACATION_TOKENS}/${token.team_id}`
   firebase.database().ref(ref).set(data)
+}
+
+const getTeamApiToken = (teamId) => {
+  return new Promise((resolve, reject) => {
+    const tokens = firebase.database().ref(`${VACATION_TOKENS}/${teamId}`)
+      tokens.on('value', (snapshot) => {
+        resolve(snapshot.val().token)
+    })
+  })
+}
+
+const getUserTeamId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)
+      tokens.on('value', (snapshot) => {
+        resolve(snapshot.val().team)
+    })
+  })
 }
 
 const getAllTokens = () => {
@@ -113,12 +131,14 @@ const getVacationDetails = (userId) => {
 
 const setVacationDetailsStarted = (userId, vacationDetails) => {
   vacationDetails.vacationStarted = true
+  vacationDetails.vacationStartedAt = new Date().toJSON()
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
   firebase.database().ref(ref).set(vacationDetails)
 }
 
 const setVacationDetailsEnded = (userId, vacationDetails) => {
   vacationDetails.vacationEnded = true
+  vacationDetails.vacationEndedAt = new Date().toJSON()
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
   firebase.database().ref(ref).set(vacationDetails)
 }
@@ -131,5 +151,7 @@ export {
   setVacationDetailsStarted,
   setVacationDetailsEnded,
   storeTeamToken,
-  getAllTokens
+  getAllTokens,
+  getTeamApiToken,
+  getUserTeamId
 }
