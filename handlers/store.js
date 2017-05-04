@@ -85,7 +85,7 @@ const getAllTokens = () => {
         const snaps = snapshot.val()
         for (var key in snaps) {
           if (snaps.hasOwnProperty(key)) {
-            tokens.push(snaps[key].bot.botToken)
+            tokens.push({ token: snaps[key].bot.botToken, team: key })
           }
         }
         resolve(tokens)
