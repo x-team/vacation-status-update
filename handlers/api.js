@@ -1,4 +1,5 @@
 import slack from 'slack-node'
+import * as errorUtil from '../util/error'
 
 const changeUserProfile = (token, userId, text, emoji) => {
   return new Promise((resolve, reject) => {
@@ -51,9 +52,11 @@ const exchangeCodeForToken = (code) => {
     }
     const slackClient = new slack(process.env.slack_api_token)
     slackClient.api('oauth.access', data, (err, response) => {
-      if (err) {
-        reject(err)
-      } else {
+      try {
+        errorUtil.handleAuthResponse(response)
+      } catch (e) {
+        reject('invalid token')
+      } finally {
         resolve(response)
       }
     })
