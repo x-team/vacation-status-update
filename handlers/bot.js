@@ -3,13 +3,16 @@ import * as storeHandler from './store'
 import * as apiHandler from '../handlers/api'
 import * as dateUtil from '../util/date'
 
+const bots = []
+
 const listener = Botkit.slackbot({
     debug: false,
     stats_optout: false
 });
 
 const createNewBotConnection = (token) => {
-  return listener.spawn({ token }).startRTM()
+  const bot = listener.spawn({ token: token.token }).startRTM()
+  bots[token.team] = bot
 }
 
 const resumeAllConnections = (tokens) => {
@@ -183,9 +186,27 @@ const startVacationRequestConversation = (bot, user) => {
   })
 }
 
+const informUserAboutVacationStart = (teamId, userId) => {
+  const bot = bots[teamId]
+  bot.startPrivateConversation({user: userId}, (err, convo) => {
+    convo.say('Hi! I just wanted to let you know that I updated your presence status with OOO message. See you soon!')
+    convo.activate()
+  })
+}
+
+const informUserAboutVacationEnd = (teamId, userId) => {
+  const bot = bots[teamId]
+  bot.startPrivateConversation({user: userId}, (err, convo) => {
+    convo.say('Hi! I just wanted to let you know that I removed OOO message from your presence status. Welcome back!')
+    convo.activate()
+  })
+}
+
 export {
   listener,
   startVacationRequestConversation,
   createNewBotConnection,
-  resumeAllConnections
+  resumeAllConnections,
+  informUserAboutVacationStart,
+  informUserAboutVacationEnd,
 }
