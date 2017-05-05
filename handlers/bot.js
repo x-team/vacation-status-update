@@ -82,6 +82,33 @@ const startVacationRequestConversation = (bot, user) => {
       }
     ],{},'confirm_end_date')
 
+    convo.addQuestion({
+      "text": "Would you like me to send notification to your team when your vacation starts?",
+      "response_type": "in_channel",
+      "attachments": [
+        {
+          "fallback": "Select channel of your team",
+          "color": "#3AA3E3",
+          "attachment_type": "default",
+          "callback_id": "select_simple_1234",
+          "actions": [
+            {
+              "name": "channels_list",
+              "text": "Select channel of your team",
+              "type": "select",
+              "data_source": "channels"
+            },
+            {
+              "name":"no",
+              "text": "No, thanks!",
+              "value": 1,
+              "type": "button",
+            }
+          ]
+        }
+      ]
+  },[],{},'should_notify_channel')
+
     convo.addQuestion(`Do you want to try again?`, [
       {
           pattern: bot.utterances.yes,
@@ -141,7 +168,7 @@ const startVacationRequestConversation = (bot, user) => {
         pattern: bot.utterances.yes,
         callback: async function(response, convo) {
           storeHandler.storeVacationInfo({userId: response.user, teamId: response.team}, convo.vars.startDate, convo.vars.endDate)
-          convo.gotoThread('end')
+          convo.gotoThread('should_notify_channel')
         }
       },
       {
@@ -165,19 +192,33 @@ const startVacationRequestConversation = (bot, user) => {
         {
             pattern: bot.utterances.yes,
             callback: (response, convo) => {
-                convo.gotoThread('yes_thread')
+              convo.gotoThread('yes_thread')
             },
         },
         {
             pattern: bot.utterances.no,
             callback: (response, convo) => {
-                convo.gotoThread('no_thread')
+              convo.gotoThread('no_thread')
+            },
+        },
+        {
+            pattern: 'test',
+            callback: (response, convo) => {
+              storeHandler.storeVacationInfo(
+                {
+                  userId: response.user,
+                  teamId: response.team
+                },
+                dateUtil.getTodayDateObject(),
+                dateUtil.getTodayDateObject()
+              )
+              convo.gotoThread('should_notify_channel')
             },
         },
         {
             default: true,
             callback: (response, convo) => {
-                convo.gotoThread('bad_response')
+              convo.gotoThread('bad_response')
             },
         }
     ]);
@@ -202,6 +243,24 @@ const informUserAboutVacationEnd = (teamId, userId) => {
   })
 }
 
+const informChannelAboutVacationStart = async function(token, teamId, channelId, userId) {
+  const bot = bots[teamId]
+  let userData = await apiHandler.getUserData(token, userId)
+  bot.say({
+      text: `@${userData.name} is starting vacation Today.`,
+      channel: channelId,
+  })
+}
+
+const informChannelAboutVacationEnd = async function(token, teamId, channelId, userId) {
+  const bot = bots[teamId]
+  let userData = await apiHandler.getUserData(token, userId)
+  bot.say({
+      text: `@${userData.name} is ending vacation Today.`,
+      channel: channelId,
+  })
+}
+
 export {
   listener,
   startVacationRequestConversation,
@@ -209,4 +268,6 @@ export {
   resumeAllConnections,
   informUserAboutVacationStart,
   informUserAboutVacationEnd,
+  informChannelAboutVacationStart,
+  informChannelAboutVacationEnd
 }
