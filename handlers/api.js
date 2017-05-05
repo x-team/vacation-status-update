@@ -23,7 +23,7 @@ const getUserData = (token, userId) => {
       if (err) {
         reject(err)
       } else {
-        resolve(response.user.profile)
+        resolve(response.user)
       }
     })
   })
