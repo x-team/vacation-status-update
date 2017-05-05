@@ -45,6 +45,11 @@ const storeVacationInfo = (userData, startDate, endDate) => {
   storeVacationDetails(userData, startDate, endDate, status)
 }
 
+const storeChannelNotificationInfo = (userId, channelId) => {
+  const ref = `${VACATION_USER_DETAILS}/${userId}/0/channel`
+  firebase.database().ref(ref).set({ id: channelId })
+}
+
 const storeTeamToken = (token) => {
   const botData = { botToken: token.bot.bot_access_token, botUserId: token.bot.bot_user_id }
   const data = { teamId: token.team_id, bot: botData, token: token.access_token }
@@ -73,6 +78,15 @@ const getUserTeamId = (userId) => {
     const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)
       tokens.on('value', (snapshot) => {
         resolve(snapshot.val().team)
+    })
+  })
+}
+
+const getUserVacationDetails = (userId) => {
+  return new Promise((resolve, reject) => {
+    const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)
+      tokens.on('value', (snapshot) => {
+        resolve(snapshot.val())
     })
   })
 }
@@ -163,5 +177,7 @@ export {
   getAllTokens,
   getTeamApiToken,
   getUserTeamId,
-  setupDevTeam
+  setupDevTeam,
+  storeChannelNotificationInfo,
+  getUserVacationDetails
 }
