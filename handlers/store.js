@@ -191,5 +191,6 @@ export {
   setupDevTeam,
   storeChannelNotificationInfo,
   getUserVacationDetails,
-  init
+  init,
+  getBotToken
 }
