@@ -3,8 +3,8 @@ const getTodayDateObject = () => {
   const month = currentTime.getMonth() + 1
   const day = currentTime.getDate()
   const year = currentTime.getFullYear()
-
-  return { year: year, month: month, day: day }
+  const date = new Date(year, month -1, day)
+  return { year: year, month: month, day: day, fancy:date.toDateString()}
 }
 
 const validate = (dateFromAnswer) => {

@@ -243,24 +243,6 @@ const informUserAboutVacationEnd = (teamId, userId) => {
   })
 }
 
-const informChannelAboutVacationStart = async function(token, teamId, channelId, userId) {
-  const bot = bots[teamId]
-  let userData = await apiHandler.getUserData(token, userId)
-  bot.say({
-      text: `@${userData.name} is starting vacation Today.`,
-      channel: channelId,
-  })
-}
-
-const informChannelAboutVacationEnd = async function(token, teamId, channelId, userId) {
-  const bot = bots[teamId]
-  let userData = await apiHandler.getUserData(token, userId)
-  bot.say({
-      text: `@${userData.name} is ending vacation Today.`,
-      channel: channelId,
-  })
-}
-
 export {
   listener,
   startVacationRequestConversation,
@@ -268,6 +250,4 @@ export {
   resumeAllConnections,
   informUserAboutVacationStart,
   informUserAboutVacationEnd,
-  informChannelAboutVacationStart,
-  informChannelAboutVacationEnd
 }
