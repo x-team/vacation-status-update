@@ -75,6 +75,15 @@ const getTeamApiToken = (teamId) => {
   })
 }
 
+const getBotToken = (teamId) => {
+  return new Promise((resolve, reject) => {
+    const tokens = firebase.database().ref(`${VACATION_TOKENS}/${teamId}`)
+      tokens.on('value', (snapshot) => {
+        resolve(snapshot.val().bot.botToken)
+    })
+  })
+}
+
 const getUserTeamId = (userId) => {
   return new Promise((resolve, reject) => {
     const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)

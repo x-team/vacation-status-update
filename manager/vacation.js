@@ -15,6 +15,7 @@ const userStartVacation = async function(user) {
     storeHandler.setVacationDetailsStarted(user.userId, vacationDetails[0])
     botHandler.informUserAboutVacationStart(vacationDetails[0].team, user.userId)
     if (vacationDetails[0].channel) {
+      let token = await storeHandler.getBotToken(vacationDetails[0].team)
       apiHandler.informChannelAboutVacationStart(
         token,
         vacationDetails[0].channel.id,
@@ -32,6 +33,7 @@ const userEndVacation = async function(user) {
     storeHandler.setVacationDetailsEnded(user.userId, vacationDetails[0])
     botHandler.informUserAboutVacationEnd(vacationDetails[0].team, user.userId)
     if (vacationDetails[0].channel) {
+      let token = await storeHandler.getBotToken(vacationDetails[0].team)
       apiHandler.informChannelAboutVacationEnd(
         token,
         vacationDetails[0].channel.id,
