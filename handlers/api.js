@@ -8,8 +8,10 @@ const changeUserProfile = (token, userId, text, emoji) => {
     const slackClient = new slack(token)
     slackClient.api('users.profile.set', apiCallData, (err, response) => {
       if (err) {
+        console.log('set presence err', err)
         reject(err)
       } else {
+        console.log('set presence ok', response)
         resolve(true)
       }
     })
