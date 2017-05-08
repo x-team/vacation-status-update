@@ -17,8 +17,10 @@ const config = {
   projectId: process.env.firebase_config_projectid
 }
 
-const app = firebase.initializeApp(config)
-firebase.auth().signInAnonymously()
+const init = () => {
+  firebase.initializeApp(config)
+  return firebase.auth().signInAnonymously()
+}
 
 const storeVacationStart = (date, userId) => {
   const data = { user: userId, date: date, type: VACATION_START}
@@ -179,5 +181,6 @@ export {
   getUserTeamId,
   setupDevTeam,
   storeChannelNotificationInfo,
-  getUserVacationDetails
+  getUserVacationDetails,
+  init
 }

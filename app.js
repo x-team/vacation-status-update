@@ -15,13 +15,14 @@ app.use(bodyParser.json())
 app.use('/api', router)
 app.listen(port)
 
-storeHandler.setupDevTeam()
 setupTeams()
 
 cronUtil.startVacationStartCheckJob()
 cronUtil.startVacationEndCheckJob()
 
 async function setupTeams() {
+  await storeHandler.init()
+  await storeHandler.setupDevTeam()
   const tokens = await storeHandler.getAllTokens()
   botHandler.resumeAllConnections(tokens)
   botHandler.listener.hears(['vacation', 'holiday', 'ooo', 'time off'], ['ambient'], (bot, message) => {
