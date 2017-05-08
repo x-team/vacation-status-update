@@ -63,9 +63,31 @@ const exchangeCodeForToken = (code) => {
   })
 }
 
+const informChannelAboutVacationStart = async function(token, channelId, userId) {
+  let userData = await getUserData(token, userId)
+  const data = {
+      text: `@${userData.name} is starting vacation Today.`,
+      channel: channelId,
+  }
+  const slackClient = new slack(token)
+  slackClient.api('chat.postMessage', data)
+}
+
+const informChannelAboutVacationEnd = async function(token, channelId, userId) {
+  let userData = await getUserData(token, userId)
+  const data = {
+      text: `@${userData.name} is ending vacation Today.`,
+      channel: channelId,
+  }
+  const slackClient = new slack(token)
+  slackClient.api('chat.postMessage', data)
+}
+
 export {
   changeUserProfile,
   getUserData,
   exchangeCodeForToken,
   identifyDevBotData,
+  informChannelAboutVacationStart,
+  informChannelAboutVacationEnd,
 }
