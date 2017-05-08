@@ -7,7 +7,8 @@ const bots = []
 
 const listener = Botkit.slackbot({
     debug: false,
-    stats_optout: false
+    stats_optout: false,
+    interactive_replies: true,
 });
 
 const createNewBotConnection = (token) => {
@@ -82,7 +83,7 @@ const startVacationRequestConversation = (bot, user) => {
       }
     ],{},'confirm_end_date')
 
-    convo.addQuestion({
+    convo.addMessage({
       "text": "Would you like me to send notification to your team when your vacation starts?",
       "response_type": "in_channel",
       "attachments": [
@@ -107,7 +108,7 @@ const startVacationRequestConversation = (bot, user) => {
           ]
         }
       ]
-  },[],{},'should_notify_channel')
+    },'should_notify_channel')
 
     convo.addQuestion(`Do you want to try again?`, [
       {
