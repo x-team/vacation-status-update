@@ -6,9 +6,8 @@ import * as dateUtil from '../util/date'
 const bots = []
 
 const listener = Botkit.slackbot({
-    debug: false,
-    stats_optout: false,
-    interactive_replies: true,
+    debug: true,
+    stats_optout: false
 });
 
 const createNewBotConnection = (token) => {

@@ -9,7 +9,10 @@ router.get('/auth', async function (req, res) {
   try {
     let token = await apiHandler.exchangeCodeForToken(req.query.code)
     storeHandler.storeTeamToken(token)
-    botHandler.createNewBotConnection(token.bot.bot_access_token)
+    botHandler.createNewBotConnection({
+      token: token.bot.bot_access_token,
+      team: token.team_id
+    })
     res.send('Thank you for authorizing our application')
   } catch (e) {
     res.send('Error. Invalid/expired code.')
