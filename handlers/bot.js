@@ -3,7 +3,7 @@ import * as storeHandler from './store'
 import * as apiHandler from '../handlers/api'
 import * as dateUtil from '../util/date'
 
-const bots = []
+let bots = []
 
 const listener = Botkit.slackbot({
     debug: true,

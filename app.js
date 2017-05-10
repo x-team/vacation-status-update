@@ -4,6 +4,7 @@ import router from './controllers'
 import * as botHandler from './handlers/bot'
 import * as storeHandler from './handlers/store'
 import * as cronUtil from './util/cron'
+import * as vacationManager from './manager/vacation'
 
 const port = process.env.PORT || 3000
 
@@ -27,5 +28,8 @@ async function setupTeams() {
   botHandler.resumeAllConnections(tokens)
   botHandler.listener.hears(['vacation', 'holiday', 'ooo', 'time off'], ['ambient'], (bot, message) => {
     botHandler.startVacationRequestConversation(bot, message.user)
+  })
+  botHandler.listener.hears('@', ['ambient'], (bot, message) => {
+    vacationManager.handleUserMention(message)
   })
 }

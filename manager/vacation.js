@@ -1,6 +1,7 @@
 import * as apiHandler from '../handlers/api'
 import * as storeHandler from '../handlers/store'
 import * as botHandler from '../handlers/bot'
+import * as messageUtil from '../util/message'
 
 const userStartVacation = async function(user) {
   let vacationDetails = await storeHandler.getVacationDetails(user.userId)
@@ -43,7 +44,17 @@ const userEndVacation = async function(user) {
   }
 }
 
+const handleUserMention = async function(message) {
+  const mentionedUsers = messageUtil.extractMentionedUsers(message)
+  const usersOnVacation = await storeHandler.filterUsersOnVacation(mentionedUsers)
+  let token = await storeHandler.getBotToken(message.team)
+  for (let key in usersOnVacation) {
+    apiHandler.informChannelMentionedUserIsAway(token, message.channel, usersOnVacation[key])
+  }
+}
+
 export {
   userStartVacation,
-  userEndVacation
+  userEndVacation,
+  handleUserMention
 }

@@ -177,6 +177,23 @@ const setVacationDetailsEnded = (userId, vacationDetails) => {
   firebase.database().ref(ref).set(vacationDetails)
 }
 
+const filterUsersOnVacation = async function(userIds) {
+  let filteredUserIds = []
+  for (let key in userIds) {
+    const userVacationDetails = await getVacationDetails(userIds[key])
+    const isOnVacation = userVacationDetails !== null
+      && userVacationDetails[0].vacationStarted !== null
+      && !userVacationDetails[0].vacationEnded
+    if (isOnVacation) {
+      filteredUserIds.push(userIds[key])
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    resolve(filteredUserIds)
+  })
+}
+
 export {
   storeVacationInfo,
   checkVacationStartToday,
@@ -192,5 +209,6 @@ export {
   storeChannelNotificationInfo,
   getUserVacationDetails,
   init,
-  getBotToken
+  getBotToken,
+  filterUsersOnVacation
 }
