@@ -206,13 +206,25 @@ const filterUsersOnVacation = async function(userIds) {
   })
 }
 
-const getAllTeamsWithUsersOnVacation = async function() {
+const getAllTeamsWithUsersOnVacation = () => {
   return new Promise((resolve, reject) => {
     const teamsOnVacation = firebase.database().ref(VACATION_LIST)
       teamsOnVacation.on('value', (snapshot) => {
         resolve(snapshot.val())
     })
   })
+}
+
+const cleanupStartDate = (userId) => {
+  const date = dateUtil.getTodayDateObject()
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+  firebase.database().ref(ref).remove()
+}
+
+const cleanupEndDate = (userId) => {
+  const date = dateUtil.getTodayDateObject()
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
+  firebase.database().ref(ref).remove()
 }
 
 export {
@@ -235,4 +247,6 @@ export {
   addToOnVacationList,
   removeFromOnVacationsList,
   getAllTeamsWithUsersOnVacation,
+  cleanupStartDate,
+  cleanupEndDate,
 }
