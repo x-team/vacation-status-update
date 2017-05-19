@@ -30,7 +30,7 @@ const bumpDndStatusForUsersOnVacation = async function() {
       // if they are still on vacation, bump by 24h
       const child = teamsWithUsersOnVacation[key]
       for ( let childKey in child) {
-          console.log('BUMP DND status for', child[childKey])
+          console.log('BUMP DND status for', childKey)
       }
     }
   })
