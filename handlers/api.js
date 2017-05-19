@@ -99,7 +99,9 @@ const setDndStatus = (token, userId, minutes) => {
     num_minutes: minutes
   }
   const slackClient = new slack(token)
-  slackClient.api('dnd.setSnooze', data)
+  slackClient.api('dnd.setSnooze', data, (err, response) => {
+    console.log('SET DND', response)
+  })
 }
 
 export {
