@@ -178,7 +178,7 @@ const addToOnVacationList = (userId, vacationDetails) => {
 
 const removeFromOnVacationsList = (userId, vacationDetails) => {
   const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
-  firebase.database().ref(ref).child(userId).remove()
+  firebase.database().ref(ref).set({})
 }
 
 const setVacationDetailsEnded = (userId, vacationDetails) => {
