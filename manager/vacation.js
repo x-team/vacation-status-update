@@ -15,6 +15,7 @@ const userStartVacation = async function(user) {
     )
     storeHandler.setVacationDetailsStarted(user.userId, vacationDetails[0])
     storeHandler.addToOnVacationList(user.userId, vacationDetails[0])
+    console.log('Vacation start', user.userId, vacationDetails[0].team)
     botHandler.informUserAboutVacationStart(vacationDetails[0].team, user.userId)
     apiHandler.setDndStatus(token, user.userId, 60 * 24)
     if (vacationDetails[0].channel) {
@@ -35,6 +36,7 @@ const userEndVacation = async function(user) {
     await apiHandler.changeUserProfile(token, user.userId, '', '')
     storeHandler.setVacationDetailsEnded(user.userId, vacationDetails[0])
     storeHandler.removeFromOnVacationsList(user.userId, vacationDetails[0])
+    console.log('Vacation end', user.userId, vacationDetails[0].team)
     botHandler.informUserAboutVacationEnd(vacationDetails[0].team, user.userId)
     apiHandler.setDndStatus(token, user.userId, 0)
     if (vacationDetails[0].channel) {
