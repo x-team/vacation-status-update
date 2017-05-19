@@ -176,6 +176,11 @@ const addToOnVacationList = (userId, vacationDetails) => {
   firebase.database().ref(ref).set({ onVacation: true })
 }
 
+const removeFromOnVacationsList = (userId, vacationDetails) => {
+  const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+  firebase.database().ref(ref).unset()
+}
+
 const setVacationDetailsEnded = (userId, vacationDetails) => {
   vacationDetails.vacationEnded = true
   vacationDetails.vacationEndedAt = new Date().toJSON()
@@ -227,5 +232,6 @@ export {
   getBotToken,
   filterUsersOnVacation,
   addToOnVacationList,
+  removeFromOnVacationsList,
   getAllTeamsWithUsersOnVacation,
 }

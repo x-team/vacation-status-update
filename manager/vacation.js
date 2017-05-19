@@ -34,6 +34,7 @@ const userEndVacation = async function(user) {
     let token = await storeHandler.getTeamApiToken(vacationDetails[0].team)
     await apiHandler.changeUserProfile(token, user.userId, '', '')
     storeHandler.setVacationDetailsEnded(user.userId, vacationDetails[0])
+    storeHandler.removeFromOnVacationsList(user.userId, vacationDetails[0])
     botHandler.informUserAboutVacationEnd(vacationDetails[0].team, user.userId)
     apiHandler.setDndStatus(token, user.userId, 0)
     if (vacationDetails[0].channel) {
