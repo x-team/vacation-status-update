@@ -94,14 +94,12 @@ const informChannelMentionedUserIsAway = async function(token, channelId, userId
   slackClient.api('chat.postMessage', data)
 }
 
-const setDndStatus = (token, userId) => {
+const setDndStatus = (token, userId, minutes) => {
   const data = {
-    num_minutes: 60 * 24
+    num_minutes: minutes
   }
   const slackClient = new slack(token)
-  slackClient.api('dnd.setSnooze', data, (x, y) => {
-    console.log('Set dnd:', x, y)
-  })
+  slackClient.api('dnd.setSnooze', data})
 }
 
 export {
