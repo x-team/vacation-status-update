@@ -3,6 +3,7 @@ import * as storeHandler from '../handlers/store'
 import * as vacationManager from '../manager/vacation'
 const START_VACATION_CRON_INTERVAL = '*/30 * * * * *'
 const END_VACATION_CRON_INTERVAL = '* * * * *'
+const DND_BUMP_INTERVAL = '* * * * *'
 
 const startVacationStartCheckJob = () => {
   cron.schedule(START_VACATION_CRON_INTERVAL, async function() {
@@ -23,8 +24,10 @@ const startVacationEndCheckJob = () => {
 }
 
 const bumpDndStatusForUsersOnVacation = async function() {
-  let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
-  console.log('Teams with users on vacation', teamsWithUsersOnVacation)
+  cron.schedule(DND_BUMP_INTERVAL, async function() {
+    let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
+    console.log('Teams with users on vacation', teamsWithUsersOnVacation)
+  })
   // if they are still on vacation, bump by 24h
   // if they are not on vacation do nothing
 }
