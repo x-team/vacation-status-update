@@ -23,7 +23,7 @@ const startVacationEndCheckJob = () => {
   })
 }
 
-const bumpDndStatusForUsersOnVacation = async function() {
+const bumpDndStatusForUsersOnVacation = () => {
   cron.schedule(DND_BUMP_INTERVAL, async function() {
     let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
     for ( let key in teamsWithUsersOnVacation) {

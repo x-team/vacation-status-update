@@ -61,7 +61,7 @@ const handleUserMention = async function(message) {
   }
 }
 
-const bumpDndStatusForUsersOnVacation = (teamId, userId) => {
+const bumpDndStatusForUsersOnVacation = async function(teamId, userId) {
   let token = await storeHandler.getTeamApiToken(teamId)
   apiHandler.setDndStatus(token, userId, 60 * 24)
 }
