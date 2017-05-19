@@ -17,6 +17,7 @@ const startVacationStartCheckJob = () => {
 const startVacationEndCheckJob = () => {
   cron.schedule(END_VACATION_CRON_INTERVAL, async function() {
     let users = await storeHandler.checkVacationEndToday()
+    console.log('Vacation of users that end today', users)
     users.forEach((user, index) => {
       vacationManager.userEndVacation(user)
     })
