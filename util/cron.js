@@ -28,7 +28,10 @@ const bumpDndStatusForUsersOnVacation = async function() {
     let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
     for ( let key in teamsWithUsersOnVacation) {
       // if they are still on vacation, bump by 24h
-      console.log('BUMP DND status for', teamsWithUsersOnVacation[key])
+      const child = teamsWithUsersOnVacation[key]
+      for ( let childKey in child) {
+          console.log('BUMP DND status for', child[childKey])
+      }
     }
   })
 }
