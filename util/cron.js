@@ -17,7 +17,6 @@ const startVacationStartCheckJob = () => {
 const startVacationEndCheckJob = () => {
   cron.schedule(END_VACATION_CRON_INTERVAL, async function() {
     let users = await storeHandler.checkVacationEndToday()
-    console.log('Vacation of users that end today', users)
     users.forEach((user, index) => {
       vacationManager.userEndVacation(user)
     })
@@ -27,10 +26,11 @@ const startVacationEndCheckJob = () => {
 const bumpDndStatusForUsersOnVacation = async function() {
   cron.schedule(DND_BUMP_INTERVAL, async function() {
     let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
-    console.log('Teams with users on vacation', teamsWithUsersOnVacation)
+    for ( let key in teamsWithUsersOnVacation) {
+      // if they are still on vacation, bump by 24h
+      console.log('BUMP DND status for', teamsWithUsersOnVacation[key])
+    }
   })
-  // if they are still on vacation, bump by 24h
-  // if they are not on vacation do nothing
 }
 
 export {

@@ -141,7 +141,6 @@ const checkVacationEndToday = () => {
   return new Promise((resolve, reject) => {
     const dateToday = dateUtil.getTodayDateObject()
     const ref = `${VACATION_DATES_ENDPOINT}/${dateToday.year}/${dateToday.month}/${dateToday.day}/${VACATION_END}`
-    console.log('Vacation end endpoint', ref)
     const vacationDetails = firebase.database().ref(ref)
       vacationDetails.once('value', (snapshot) => {
         let users = []
