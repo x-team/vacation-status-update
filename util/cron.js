@@ -22,7 +22,15 @@ const startVacationEndCheckJob = () => {
   })
 }
 
+const bumpDndStatusForUsersOnVacation = async function() {
+  let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
+  console.log('Teams with users on vacation', teamsWithUsersOnVacation)
+  // if they are still on vacation, bump by 24h
+  // if they are not on vacation do nothing
+}
+
 export {
   startVacationStartCheckJob,
-  startVacationEndCheckJob
+  startVacationEndCheckJob,
+  bumpDndStatusForUsersOnVacation,
 }

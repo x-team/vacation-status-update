@@ -14,6 +14,7 @@ const userStartVacation = async function(user) {
       ':no_entry:'
     )
     storeHandler.setVacationDetailsStarted(user.userId, vacationDetails[0])
+    storeHandler.addToOnVacationList(user.userId, vacationDetails[0])
     botHandler.informUserAboutVacationStart(vacationDetails[0].team, user.userId)
     apiHandler.setDndStatus(token, user.userId, 60 * 24)
     if (vacationDetails[0].channel) {

@@ -7,6 +7,7 @@ const VACATION_START = 'start'
 const VACATION_END = 'end'
 const VACATION_DATES_ENDPOINT = 'dates'
 const VACATION_USER_DETAILS = 'users'
+const VACATION_LIST = 'vacations'
 const VACATION_TOKENS = 'tokens'
 const config = {
   apiKey: process.env.firebase_config_apikey,
@@ -170,6 +171,11 @@ const setVacationDetailsStarted = (userId, vacationDetails) => {
   firebase.database().ref(ref).set(vacationDetails)
 }
 
+const addToOnVacationList = (userId, vacationDetails) => {
+  const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+  firebase.database().ref(ref).set({ onVacation: true })
+}
+
 const setVacationDetailsEnded = (userId, vacationDetails) => {
   vacationDetails.vacationEnded = true
   vacationDetails.vacationEndedAt = new Date().toJSON()
@@ -194,6 +200,15 @@ const filterUsersOnVacation = async function(userIds) {
   })
 }
 
+const getAllTeamsWithUsersOnVacation = async function() {
+  return new Promise((resolve, reject) => {
+    const teamsOnVacation = firebase.database().ref(VACATION_LIST)
+      teamsOnVacation.on('value', (snapshot) => {
+        resolve(snapshot.val())
+    })
+  })
+}
+
 export {
   storeVacationInfo,
   checkVacationStartToday,
@@ -210,5 +225,7 @@ export {
   getUserVacationDetails,
   init,
   getBotToken,
-  filterUsersOnVacation
+  filterUsersOnVacation,
+  addToOnVacationList,
+  getAllTeamsWithUsersOnVacation,
 }
