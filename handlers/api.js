@@ -8,10 +8,9 @@ const changeUserProfile = (token, userId, text, emoji) => {
     const slackClient = new slack(token)
     slackClient.api('users.profile.set', apiCallData, (err, response) => {
       if (err) {
-        console.log('set presence err', err)
         reject(err)
       } else {
-        console.log('set presence ok', response)
+        console.log('set presence response', response, apiCallData)
         resolve(true)
       }
     })
@@ -85,6 +84,26 @@ const informChannelAboutVacationEnd = async function(token, channelId, userId) {
   slackClient.api('chat.postMessage', data)
 }
 
+const informChannelMentionedUserIsAway = async function(token, channelId, userId) {
+  let userData = await getUserData(token, userId)
+  const data = {
+      text: `@${userData.name} is currently on vacation.`,
+      channel: channelId,
+  }
+  const slackClient = new slack(token)
+  slackClient.api('chat.postMessage', data)
+}
+
+const setDndStatus = (token, userId, minutes) => {
+  const data = {
+    num_minutes: minutes
+  }
+  const slackClient = new slack(token)
+  slackClient.api('dnd.setSnooze', data, (err, response) => {
+    console.log('SET DND', response)
+  })
+}
+
 export {
   changeUserProfile,
   getUserData,
@@ -92,4 +111,6 @@ export {
   identifyDevBotData,
   informChannelAboutVacationStart,
   informChannelAboutVacationEnd,
+  informChannelMentionedUserIsAway,
+  setDndStatus
 }

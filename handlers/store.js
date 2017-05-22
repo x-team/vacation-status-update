@@ -7,6 +7,7 @@ const VACATION_START = 'start'
 const VACATION_END = 'end'
 const VACATION_DATES_ENDPOINT = 'dates'
 const VACATION_USER_DETAILS = 'users'
+const VACATION_LIST = 'vacations'
 const VACATION_TOKENS = 'tokens'
 const config = {
   apiKey: process.env.firebase_config_apikey,
@@ -170,11 +171,59 @@ const setVacationDetailsStarted = (userId, vacationDetails) => {
   firebase.database().ref(ref).set(vacationDetails)
 }
 
+const addToOnVacationList = (userId, vacationDetails) => {
+  const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+  firebase.database().ref(ref).set({ onVacation: true })
+}
+
+const removeFromOnVacationsList = (userId, vacationDetails) => {
+  const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+  firebase.database().ref(ref).remove()
+}
+
 const setVacationDetailsEnded = (userId, vacationDetails) => {
   vacationDetails.vacationEnded = true
   vacationDetails.vacationEndedAt = new Date().toJSON()
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
   firebase.database().ref(ref).set(vacationDetails)
+}
+
+const filterUsersOnVacation = async function(userIds) {
+  let filteredUserIds = []
+  for (let key in userIds) {
+    const userVacationDetails = await getVacationDetails(userIds[key])
+    const isOnVacation = userVacationDetails !== null
+      && userVacationDetails[0].vacationStarted !== null
+      && !userVacationDetails[0].vacationEnded
+    if (isOnVacation) {
+      filteredUserIds.push(userIds[key])
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    resolve(filteredUserIds)
+  })
+}
+
+const getAllTeamsWithUsersOnVacation = () => {
+  return new Promise((resolve, reject) => {
+    const teamsOnVacation = firebase.database().ref(VACATION_LIST)
+      teamsOnVacation.on('value', (snapshot) => {
+        resolve(snapshot.val())
+    })
+  })
+}
+
+const cleanupStartDate = (userId) => {
+  const date = dateUtil.getTodayDateObject()
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+  firebase.database().ref(ref).remove()
+}
+
+const cleanupEndDate = (userId) => {
+  const date = dateUtil.getTodayDateObject()
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
+  firebase.database().ref(ref).remove()
 }
 
 export {
@@ -192,5 +241,11 @@ export {
   storeChannelNotificationInfo,
   getUserVacationDetails,
   init,
-  getBotToken
+  getBotToken,
+  filterUsersOnVacation,
+  addToOnVacationList,
+  removeFromOnVacationsList,
+  getAllTeamsWithUsersOnVacation,
+  cleanupStartDate,
+  cleanupEndDate,
 }
