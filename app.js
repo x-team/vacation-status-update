@@ -20,7 +20,7 @@ setupTeams()
 
 cronUtil.startVacationStartCheckJob()
 cronUtil.startVacationEndCheckJob()
-cronUtil.bumpDndStatusForUsersOnVacation()
+// cronUtil.bumpDndStatusForUsersOnVacation()
 
 async function setupTeams() {
   await storeHandler.init()

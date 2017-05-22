@@ -13,7 +13,7 @@ const userStartVacation = async function(user) {
       vacationDetails[0].status,
       ':no_entry:'
     )
-    await apiHandler.setDndStatus(token, user.userId, 60 * 24)
+    // await apiHandler.setDndStatus(token, user.userId, 60 * 24)
     storeHandler.setVacationDetailsStarted(user.userId, vacationDetails[0])
     storeHandler.addToOnVacationList(user.userId, vacationDetails[0])
     storeHandler.cleanupStartDate(user.userId)
@@ -35,7 +35,7 @@ const userEndVacation = async function(user) {
   if (vacationDetails[0].vacationStarted && !vacationDetails[0].vacationEnded) {
     let token = await storeHandler.getTeamApiToken(vacationDetails[0].team)
     await apiHandler.changeUserProfile(token, user.userId, '', '')
-    await apiHandler.setDndStatus(token, user.userId, 0)
+    // await apiHandler.setDndStatus(token, user.userId, 0)
     storeHandler.setVacationDetailsEnded(user.userId, vacationDetails[0])
     storeHandler.removeFromOnVacationsList(user.userId, vacationDetails[0])
     storeHandler.cleanupEndDate(user.userId)
@@ -61,14 +61,13 @@ const handleUserMention = async function(message) {
   }
 }
 
-const bumpDndStatusForUsersOnVacation = async function(teamId, userId) {
-  let token = await storeHandler.getTeamApiToken(teamId)
-  apiHandler.setDndStatus(token, userId, 60 * 24)
-}
+// const bumpDndStatusForUsersOnVacation = async function(teamId, userId) {
+//   let token = await storeHandler.getTeamApiToken(teamId)
+//   apiHandler.setDndStatus(token, userId, 60 * 24)
+// }
 
 export {
   userStartVacation,
   userEndVacation,
   handleUserMention,
-  bumpDndStatusForUsersOnVacation,
 }
