@@ -56,8 +56,10 @@ const exchangeCodeForToken = (code) => {
       try {
         errorUtil.handleAuthResponse(response)
       } catch (e) {
+        console.log('Token exchange err', e)
         reject('invalid token')
       } finally {
+        console.log('Token exchange ok response', response)
         resolve(response)
       }
     })
