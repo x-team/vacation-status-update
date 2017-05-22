@@ -23,20 +23,19 @@ const startVacationEndCheckJob = () => {
   })
 }
 
-const bumpDndStatusForUsersOnVacation = () => {
-  cron.schedule(DND_BUMP_INTERVAL, async function() {
-    let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
-    for ( let key in teamsWithUsersOnVacation) {
-      const child = teamsWithUsersOnVacation[key]
-      for ( let childKey in child) {
-          vacationManager.bumpDndStatusForUsersOnVacation(key, childKey)
-      }
-    }
-  })
-}
+// const bumpDndStatusForUsersOnVacation = () => {
+//   cron.schedule(DND_BUMP_INTERVAL, async function() {
+//     let teamsWithUsersOnVacation = await storeHandler.getAllTeamsWithUsersOnVacation()
+//     for ( let key in teamsWithUsersOnVacation) {
+//       const child = teamsWithUsersOnVacation[key]
+//       for ( let childKey in child) {
+//           vacationManager.bumpDndStatusForUsersOnVacation(key, childKey)
+//       }
+//     }
+//   })
+// }
 
 export {
   startVacationStartCheckJob,
   startVacationEndCheckJob,
-  bumpDndStatusForUsersOnVacation,
 }
