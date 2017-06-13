@@ -29,6 +29,7 @@ async function setupTeams() {
   botHandler.resumeAllConnections(tokens)
   botHandler.listener.hears(['vacation', 'holiday', 'ooo', 'time off'], ['ambient'], (bot, message) => {
     botHandler.startVacationRequestConversation(bot, message.user)
+    botHandler.markMessageWithEmoji(bot, message)
   })
   botHandler.listener.hears('@', ['ambient'], (bot, message) => {
     vacationManager.handleUserMention(message)
