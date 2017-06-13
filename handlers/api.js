@@ -32,7 +32,7 @@ const getUserData = (token, userId) => {
 
 const identifyDevBotData = () => {
   return new Promise((resolve, reject) => {
-    const slackClient = new slack(process.env.slack_bot_token)
+    const slackClient = new slack(process.env.slack_api_token)
     slackClient.api('auth.test', (err, response) => {
       if (err) {
         reject(err)

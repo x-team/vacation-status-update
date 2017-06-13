@@ -6,7 +6,7 @@ import * as dateUtil from '../util/date'
 let bots = []
 
 const listener = Botkit.slackbot({
-    debug: true,
+    debug: false,
     stats_optout: false
 });
 
@@ -243,6 +243,15 @@ const informUserAboutVacationEnd = (teamId, userId) => {
   })
 }
 
+const markMessageWithEmoji = (bot, message) => {
+  const data = {
+    name: process.env.emoji_name,
+    timestamp: message.ts,
+    channel: message.channel,
+  }
+  bot.api.reactions.add(data)
+}
+
 export {
   listener,
   startVacationRequestConversation,
@@ -250,4 +259,5 @@ export {
   resumeAllConnections,
   informUserAboutVacationStart,
   informUserAboutVacationEnd,
+  markMessageWithEmoji,
 }
