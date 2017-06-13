@@ -45,7 +45,7 @@ const handleEndDateAnswer = (response, convo) => {
 
 const startVacationRequestConversation = (bot, user) => {
   bot.startPrivateConversation({user: user}, (err, convo) => {
-    convo.addQuestion('Awesome. And what day will you be back? (Use dd/mm/yyyy again)',[
+    convo.addQuestion(`Awesome. And what day will you be back? (Use ${dateUtil.FORMAT} again)`,[
       {
         default: true,
         callback: (response, convo) => { handleEndDateAnswer(response, convo) }
@@ -124,35 +124,35 @@ const startVacationRequestConversation = (bot, user) => {
       }
     ],{},'do_you_want_to_try_again')
 
-    convo.addQuestion('Please provide the date in format dd/mm/yyyy (sorry, my boss is a stickler)',[
+    convo.addQuestion(`Please provide the date in format ${dateUtil.FORMAT} (sorry, my boss is a stickler)`,[
       {
         default: true,
         callback: (response, convo) => { handleStartDateAnswer(response, convo) }
       }
     ],{},'remind_start_date_format')
 
-    convo.addQuestion('Please provide the date in format dd/mm/yyyy (sorry, my boss is a stickler)',[
+    convo.addQuestion(`Please provide the date in format ${dateUtil.FORMAT} (sorry, my boss is a stickler)`, [
       {
         default: true,
         callback: (response, convo) => { handleEndDateAnswer(response, convo) }
       }
     ],{},'remind_end_date_format')
 
-    convo.addQuestion('Ok, let\'s try it again then. Please provide the start date in format dd/mm/yyyy',[
+    convo.addQuestion(`Ok, let's try it again then. Please provide the start date in format ${dateUtil.FORMAT}`, [
       {
         default: true,
         callback: (response, convo) => { handleStartDateAnswer(response, convo) }
       }
     ],{},'try_providing_start_date_again')
 
-    convo.addQuestion('Ok, let\'s try it again then. Please provide the end date in format dd/mm/yyyy',[
+    convo.addQuestion(`Ok, let's try it again then. Please provide the end date in format ${dateUtil.FORMAT}`, [
       {
         default: true,
         callback: (response, convo) => { handleEndDateAnswer(response, convo) }
       }
     ],{},'try_providing_end_date_again')
 
-    convo.addQuestion('Noice! I can update your Slack status (with a nice emoji) for you on the day you leave so you don\'t forget. What day will your vacation start? (Use the format: dd/mm/yyyy)',[
+    convo.addQuestion(`Noice! I can update your Slack status (with a nice emoji) for you on the day you leave so you don't forget. What day will your vacation start? (Use the format: ${dateUtil.FORMAT})`,[
       {
         default: true,
         callback: (response, convo) => { handleStartDateAnswer(response, convo) }
