@@ -1,5 +1,6 @@
 import slack from 'slack-node'
 import * as errorUtil from '../util/error'
+import { bots } from './bot'
 
 const changeUserProfile = (token, userId, text, emoji) => {
   return new Promise((resolve, reject) => {
@@ -106,6 +107,15 @@ const setDndStatus = (token, userId, minutes) => {
   })
 }
 
+const inviteBotToChannel = (team, user, channel) => {
+  const bot = bots[team]
+  const data = { channel, user: bot.identity.id }
+  const slackClient = new slack('xoxp-177511171397-177465355060-181494758711-7328d13c177f29be77c1d6b28c5a190a')
+  slackClient.api('channels.invite', data, (err, response) => {
+    console.log('CHANNEL INVITE', response)
+  })
+}
+
 export {
   changeUserProfile,
   getUserData,
@@ -114,5 +124,6 @@ export {
   informChannelAboutVacationStart,
   informChannelAboutVacationEnd,
   informChannelMentionedUserIsAway,
-  setDndStatus
+  setDndStatus,
+  inviteBotToChannel,
 }

@@ -9,6 +9,7 @@ const VACATION_DATES_ENDPOINT = 'dates'
 const VACATION_USER_DETAILS = 'users'
 const VACATION_LIST = 'vacations'
 const VACATION_TOKENS = 'tokens'
+const CHANNELS = 'channels'
 const config = {
   apiKey: process.env.firebase_config_apikey,
   authDomain: process.env.firebase_config_authdomain,
@@ -51,6 +52,12 @@ const storeVacationInfo = (userData, startDate, endDate) => {
 const storeChannelNotificationInfo = (userId, channelId) => {
   const ref = `${VACATION_USER_DETAILS}/${userId}/0/channel`
   firebase.database().ref(ref).set({ id: channelId })
+}
+
+const storeListenerChannelId = (team, user, channel) => {
+  const ref = `${CHANNELS}/${team}`
+  console.log(ref, { team, user, channel })
+  firebase.database().ref(ref).set({ team, user, channel })
 }
 
 const storeTeamToken = (token) => {
@@ -248,4 +255,5 @@ export {
   getAllTeamsWithUsersOnVacation,
   cleanupStartDate,
   cleanupEndDate,
+  storeListenerChannelId,
 }

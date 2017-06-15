@@ -1,8 +1,8 @@
 import express from 'express'
-import slashCommandController from './slashCommandController'
-import authController from './authController'
-import interactiveMessagesController from './interactiveMessagesController'
-import wakeController from './wakeController'
+import slashCommandController from './slashCommand'
+import authController from './auth'
+import interactiveMessagesController from './interactiveMessages'
+import wakeController from './wake'
 
 const router = new express.Router()
 
