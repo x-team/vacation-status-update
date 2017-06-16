@@ -2,6 +2,7 @@ import Botkit from 'botkit'
 import * as storeHandler from './store'
 import * as apiHandler from '../handlers/api'
 import * as dateUtil from '../util/date'
+import { formatChannelsToOptions } from '../util/formatter'
 
 let bots = []
 
@@ -13,6 +14,8 @@ const listener = Botkit.slackbot({
 const createNewBotConnection = (token) => {
   const bot = listener.spawn({ token: token.token }).startRTM()
   bots[token.team] = bot
+
+  return bot
 }
 
 const resumeAllConnections = (tokens) => {
@@ -83,26 +86,26 @@ const startVacationRequestConversation = (bot, user) => {
     ],{},'confirm_end_date')
 
     convo.addMessage({
-      "text": "Would you like me to send notification to your team when your vacation starts?",
-      "response_type": "in_channel",
-      "attachments": [
+      text: 'Would you like me to send notification to your team when your vacation starts?',
+      response_type: 'in_channel',
+      attachments: [
         {
-          "fallback": "Select channel of your team",
-          "color": "#3AA3E3",
-          "attachment_type": "default",
-          "callback_id": "select_simple_1234",
-          "actions": [
+          fallback: 'Select channel of your team',
+          color: '#3AA3E3',
+          attachment_type: 'default',
+          callback_id: 'notify_team',
+          actions: [
             {
-              "name": "channels_list",
-              "text": "Select channel of your team",
-              "type": "select",
-              "data_source": "channels"
+              name: 'channels_list',
+              text: 'Select channel of your team',
+              type: 'select',
+              data_source: 'channels'
             },
             {
-              "name":"no",
-              "text": "No, thanks!",
-              "value": 1,
-              "type": "button",
+              name: 'no',
+              text: 'No, thanks!',
+              value: 1,
+              type: 'button',
             }
           ]
         }
@@ -252,6 +255,39 @@ const markMessageWithEmoji = (bot, message) => {
   bot.api.reactions.add(data)
 }
 
+const sendPostInstallMessage = async (bot, user, team) => {
+  const privateChannels = await apiHandler.getListOfPrivateChannel(team)
+  bot.startPrivateConversation({ user }, (err, convo) => {
+    convo.addMessage({
+      text: 'Hello!\n\nI am Vacation Bot and I am here to help your team manage Out Of Office notifications.\n\nI need to be invited to channels in which your teammates might inform about upcoming Out Of Office time.',
+      response_type: 'in_channel',
+      attachments: [
+        {
+          fallback: 'Select channel of your team',
+          color: '#3AA3E3',
+          attachment_type: 'default',
+          callback_id: 'invite_bot',
+          actions: [
+            {
+              name: 'channels_list',
+              text: 'Public channels',
+              type: 'select',
+              data_source: 'channels'
+            },
+            {
+              name: 'groups_list',
+              text: 'Private channels',
+              type: 'select',
+              options: formatChannelsToOptions(privateChannels)
+            },
+          ]
+        }
+      ]
+    },'default')
+    convo.activate()
+  })
+}
+
 export {
   listener,
   startVacationRequestConversation,
@@ -260,4 +296,6 @@ export {
   informUserAboutVacationStart,
   informUserAboutVacationEnd,
   markMessageWithEmoji,
+  sendPostInstallMessage,
+  bots,
 }
