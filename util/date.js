@@ -1,3 +1,5 @@
+const FORMAT = 'dd/mm/yyyy'
+
 const getTodayDateObject = () => {
   const currentTime = new Date()
   const month = currentTime.getMonth() + 1
@@ -23,5 +25,6 @@ const guessDate = (dateFromAnswerValidated) => {
 export {
   getTodayDateObject,
   validate,
-  guessDate
+  guessDate,
+  FORMAT
 }
