@@ -56,7 +56,6 @@ const storeChannelNotificationInfo = (userId, channelId) => {
 
 const storeListenerChannelId = (team, user, channel) => {
   const ref = `${CHANNELS}/${team}`
-  console.log(ref, { team, user, channel })
   firebase.database().ref(ref).set({ team, user, channel })
 }
 

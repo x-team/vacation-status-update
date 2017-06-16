@@ -1,6 +1,7 @@
 import slack from 'slack-node'
 import * as errorUtil from '../util/error'
 import { bots } from './bot'
+import { getTeamApiToken } from './store'
 
 const changeUserProfile = (token, userId, text, emoji) => {
   return new Promise((resolve, reject) => {
@@ -67,7 +68,7 @@ const exchangeCodeForToken = (code) => {
   })
 }
 
-const informChannelAboutVacationStart = async function(token, channelId, userId) {
+const informChannelAboutVacationStart = async (token, channelId, userId) => {
   let userData = await getUserData(token, userId)
   const data = {
       text: `@${userData.name} is starting vacation Today.`,
@@ -77,7 +78,7 @@ const informChannelAboutVacationStart = async function(token, channelId, userId)
   slackClient.api('chat.postMessage', data)
 }
 
-const informChannelAboutVacationEnd = async function(token, channelId, userId) {
+const informChannelAboutVacationEnd = async (token, channelId, userId) => {
   let userData = await getUserData(token, userId)
   const data = {
       text: `@${userData.name} is ending vacation Today.`,
@@ -87,7 +88,7 @@ const informChannelAboutVacationEnd = async function(token, channelId, userId) {
   slackClient.api('chat.postMessage', data)
 }
 
-const informChannelMentionedUserIsAway = async function(token, channelId, userId) {
+const informChannelMentionedUserIsAway = async (token, channelId, userId) => {
   let userData = await getUserData(token, userId)
   const data = {
       text: `@${userData.name} is currently on vacation.`,
@@ -102,17 +103,32 @@ const setDndStatus = (token, userId, minutes) => {
     num_minutes: minutes
   }
   const slackClient = new slack(token)
-  slackClient.api('dnd.setSnooze', data, (err, response) => {
-    console.log('SET DND', response)
-  })
+  slackClient.api('dnd.setSnooze', data)
 }
 
-const inviteBotToChannel = (team, user, channel) => {
+const inviteBotToChannel = async (team, channel) => {
   const bot = bots[team]
   const data = { channel, user: bot.identity.id }
-  const slackClient = new slack('xoxp-177511171397-177465355060-181494758711-7328d13c177f29be77c1d6b28c5a190a')
-  slackClient.api('channels.invite', data, (err, response) => {
-    console.log('CHANNEL INVITE', response)
+  const token = await getTeamApiToken(team)
+  const slackClient = new slack(token)
+  slackClient.api('channels.invite', data)
+}
+
+const inviteBotToGroup = async (team, channel) => {
+  const bot = bots[team]
+  const data = { channel, user: bot.identity.id }
+  const token = await getTeamApiToken(team)
+  const slackClient = new slack(token)
+  slackClient.api('groups.invite', data)
+}
+
+const getListOfPrivateChannel = async (team) => {
+  const token = await getTeamApiToken(team)
+  const slackClient = new slack(token)
+  return new Promise((resolve, reject) => {
+    slackClient.api('groups.list', {}, (err, response) => {
+      resolve(response.groups)
+    })
   })
 }
 
@@ -126,4 +142,6 @@ export {
   informChannelMentionedUserIsAway,
   setDndStatus,
   inviteBotToChannel,
+  inviteBotToGroup,
+  getListOfPrivateChannel,
 }

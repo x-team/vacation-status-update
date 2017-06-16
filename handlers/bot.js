@@ -2,6 +2,7 @@ import Botkit from 'botkit'
 import * as storeHandler from './store'
 import * as apiHandler from '../handlers/api'
 import * as dateUtil from '../util/date'
+import { formatChannelsToOptions } from '../util/formatter'
 
 let bots = []
 
@@ -254,7 +255,8 @@ const markMessageWithEmoji = (bot, message) => {
   bot.api.reactions.add(data)
 }
 
-const sendPostInstallMessage = (bot, user) => {
+const sendPostInstallMessage = async (bot, user, team) => {
+  const privateChannels = await apiHandler.getListOfPrivateChannel(team)
   bot.startPrivateConversation({ user }, (err, convo) => {
     convo.addMessage({
       text: 'Hello!\n\nI am Vacation Bot and I am here to help your team manage Out Of Office notifications.\n\nI need to be invited to channels in which your teammates might inform about upcoming Out Of Office time.',
@@ -268,16 +270,16 @@ const sendPostInstallMessage = (bot, user) => {
           actions: [
             {
               name: 'channels_list',
-              text: 'Select channel of your team',
+              text: 'Public channels',
               type: 'select',
               data_source: 'channels'
             },
             {
-              name: 'no',
-              text: 'No, thanks!',
-              value: 1,
-              type: 'button',
-            }
+              name: 'groups_list',
+              text: 'Private channels',
+              type: 'select',
+              options: formatChannelsToOptions(privateChannels)
+            },
           ]
         }
       ]

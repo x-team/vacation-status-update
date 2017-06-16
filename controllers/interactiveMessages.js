@@ -1,6 +1,6 @@
 import express from 'express'
 import { storeChannelNotificationInfo, storeListenerChannelId} from '../handlers/store'
-import { inviteBotToChannel } from '../handlers/api'
+import { inviteBotToChannel, inviteBotToGroup } from '../handlers/api'
 
 const router = new express.Router()
 
@@ -16,7 +16,14 @@ router.post('/im', async function (req, res) {
       const userId = payload.user.id
       const teamId = payload.team.id
       storeListenerChannelId(teamId, userId, channelId)
-      inviteBotToChannel(teamId, userId, channelId)
+      switch (payload.actions[0].name) {
+        case 'groups_list':
+          inviteBotToGroup(teamId, channelId)
+          break
+        case 'channels_list':
+          inviteBotToChannel(teamId, channelId)
+          break
+      }
     }
   }
   res.send('Thanks!')
