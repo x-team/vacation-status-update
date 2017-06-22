@@ -54,7 +54,7 @@ const userEndVacation = async function(user) {
 
 const handleUserMention = async function(message) {
   const mentionedUsers = messageUtil.extractMentionedUsers(message)
-  const usersOnVacation = await storeHandler.filterUsersOnVacation(mentionedUsers)
+  const usersOnVacation = await storeHandler.filterUsersOnVacation(mentionedUsers, message.team)
   let token = await storeHandler.getBotToken(message.team)
   for (let key in usersOnVacation) {
     apiHandler.informChannelMentionedUserIsAway(token, message.channel, usersOnVacation[key])
