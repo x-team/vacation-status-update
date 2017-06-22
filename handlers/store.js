@@ -194,15 +194,12 @@ const setVacationDetailsEnded = (userId, vacationDetails) => {
   firebase.database().ref(ref).set(vacationDetails)
 }
 
-const filterUsersOnVacation = async function(userIds) {
+const filterUsersOnVacation = async (users, team) => {
   let filteredUserIds = []
-  for (let key in userIds) {
-    const userVacationDetails = await getVacationDetails(userIds[key])
-    const isOnVacation = userVacationDetails !== null
-      && userVacationDetails[0].vacationStarted !== null
-      && !userVacationDetails[0].vacationEnded
-    if (isOnVacation) {
-      filteredUserIds.push(userIds[key])
+  for (let key in users) {
+    const userId = users[key]
+    if (await checkIsUserOnVacation(userId, team)) {
+      filteredUserIds.push(userId)
     }
   }
 
@@ -214,6 +211,15 @@ const filterUsersOnVacation = async function(userIds) {
 const getAllTeamsWithUsersOnVacation = () => {
   return new Promise((resolve, reject) => {
     const teamsOnVacation = firebase.database().ref(VACATION_LIST)
+      teamsOnVacation.on('value', (snapshot) => {
+        resolve(snapshot.val())
+    })
+  })
+}
+
+const checkIsUserOnVacation = (user, team) => {
+  return new Promise((resolve, reject) => {
+    const teamsOnVacation = firebase.database().ref(`${VACATION_LIST}/${team}/${user}`)
       teamsOnVacation.on('value', (snapshot) => {
         resolve(snapshot.val())
     })
