@@ -12,9 +12,11 @@ const listener = Botkit.slackbot({
 });
 
 const createNewBotConnection = (token) => {
-  const bot = listener.spawn({ token: token.token }).startRTM()
-  bots[token.team] = bot
-
+  let bot = bots[token.team]
+  if (!bot) {
+    bot = listener.spawn({ token: token.token }).startRTM()
+    bots[token.team] = bot
+  }
   return bot
 }
 

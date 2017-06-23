@@ -12,7 +12,6 @@ const changeUserProfile = (token, userId, text, emoji) => {
       if (err) {
         reject(err)
       } else {
-        console.log('set presence response', response, apiCallData)
         resolve(true)
       }
     })
@@ -61,7 +60,6 @@ const exchangeCodeForToken = (code) => {
         console.log('Token exchange err', e)
         reject('invalid token')
       } finally {
-        console.log('Token exchange ok response', response)
         resolve(response)
       }
     })
