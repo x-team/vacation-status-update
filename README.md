@@ -70,3 +70,35 @@ slack_api_token=xxx
 slack_bot_token=xxx
 
 slack_app_redirect_uri=xxx
+
+# Heroku
+
+I do recommend using Heroku for local and server side development. It is very easy to deploy and setup on both environments and it's free. It provides https endpoints by default as well.
+
+Install heroku CLI on your local machine to use `heroku local` functionalities.
+
+Some of the functionalities of the application you will be able to test without deploying to public server, like:
+
+- bot websockets RTM connection, slack web API connection, hosting add to slack button and others
+
+You will not be able to host public endpoints which are needed for two actions:
+
+- authorizing application for installing to slack team
+
+- interactive messages request handling
+
+For those I recommend deploying to Heroku but you can also use other services and tunneling for local environment, such as localtunnel or ngrok ( the connection will be dependent on your internet)
+
+# Contributing issues
+
+If you find and contributing issues please create github issue and I will assist or update instructions
+
+# Github workflow
+
+Please fork this repository first.
+
+Please provide a PR to master branch.
+
+Please use smart commit messages: `git commit -m 'Installation fixes --closes #123'` where `#123` being github issue key.
+
+## Thanks for contributing!
