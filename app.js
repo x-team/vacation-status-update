@@ -35,7 +35,6 @@ async function setupTeams() {
     /(i|we)(\swill|'ll|’ll) be (out|off) (most of the|next) (day|week|month|year|time|couple of days)/gim,
     /(i|we)(\swill|'ll|’ll) be (out|off) (the day after\s)?tomorrow/gim,
     /(i|we)(\swill|'ll|’ll) be (out|off) in (\w+|\d+) days/gim,
-    /(i|we)(\swill|'ll|’ll) be in \w+ (the|from|in|next) \w+|(\d+\w+)/gim,
     /(i|we)(\swill|'ll|’ll|\sneed to) take (some|a) time off/gim,
   ]
   botHandler.listener.hears(phrases, ['ambient'], (bot, message) => {
