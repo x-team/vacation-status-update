@@ -3,7 +3,8 @@
   "version": "0.0.3",
   "private": true,
   "scripts": {
-    "start": "npm install && ./node_modules/.bin/babel-node app.js --presets es2015"
+    "start": "npm install && ./node_modules/.bin/babel-node app.js --presets es2015",
+    "dev": "env $(cat .env | xargs) nodemon --exec ./node_modules/.bin/babel-node --presets es2015"
   },
   "dependencies": {
     "botkit": "^0.4.10",
