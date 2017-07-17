@@ -12,8 +12,8 @@ const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use('/', router.dashboard)
-app.use('/api', router.api)
+app.use('/api', router)
+app.use(express.static('dist'))
 app.listen(port)
 
 setupTeams()

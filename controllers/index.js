@@ -3,18 +3,12 @@ import slashCommandController from './slashCommand'
 import authController from './auth'
 import interactiveMessagesController from './interactiveMessages'
 import wakeController from './wake'
-import dashboardController from './dashboard'
 
-const api = new express.Router()
-const dashboard = new express.Router()
+const router = new express.Router()
 
-api.use(slashCommandController)
-api.use(authController)
-api.use(interactiveMessagesController)
-api.use(wakeController)
+router.use(slashCommandController)
+router.use(authController)
+router.use(interactiveMessagesController)
+router.use(wakeController)
 
-dashboard.use(dashboardController)
-
-export default {
-  api, dashboard
-}
+export default router
