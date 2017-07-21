@@ -1,7 +1,9 @@
-import firebase from 'firebase'
+import * as firebase from 'firebase-admin'
+import serviceAccount from '../serviceAccountKey.json'
 import * as formatterUtil from '../util/formatter'
 import * as dateUtil from '../util/date'
 import * as apiHandler from './api'
+
 
 const VACATION_START = 'start'
 const VACATION_END = 'end'
@@ -10,18 +12,14 @@ const VACATION_USER_DETAILS = 'users'
 const VACATION_LIST = 'vacations'
 const VACATION_TOKENS = 'tokens'
 const CHANNELS = 'channels'
-const config = {
-  apiKey: process.env.firebase_config_apikey,
-  authDomain: process.env.firebase_config_authdomain,
-  databaseURL: process.env.firebase_config_databaseurl,
-  storageBucket: process.env.firebase_config_storagebucket,
-  messagingSenderId: process.env.firebase_config_messagingsenderid,
-  projectId: process.env.firebase_config_projectid
-}
 
 const init = () => {
-  firebase.initializeApp(config)
-  return firebase.auth().signInAnonymously()
+  firebase.initializeApp({
+    credential: firebase.credential.cert(serviceAccount),
+    databaseURL: process.env.firebase_config_databaseurl
+  })
+
+  return firebase.auth()
 }
 
 const storeVacationStart = (date, userId) => {

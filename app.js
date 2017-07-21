@@ -1,20 +1,26 @@
 import bodyParser from 'body-parser'
 import express from 'express'
+import http from 'http'
+import socketio from 'socket.io'
 import router from './controllers'
 import * as botHandler from './handlers/bot'
 import * as storeHandler from './handlers/store'
 import * as cronUtil from './util/cron'
 import * as vacationManager from './manager/vacation'
+import websocketHandler from './handlers/websocket'
 
 const port = process.env.PORT || 3000
 
 const app = express()
+const server = http.Server(app)
+const io = socketio(server)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use('/api', router)
 app.use(express.static('dist'))
-app.listen(port)
+server.listen(port)
+io.on('connection', websocketHandler)
 
 setupTeams()
 
