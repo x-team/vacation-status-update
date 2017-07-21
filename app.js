@@ -28,9 +28,9 @@ async function setupTeams() {
   const phrases = [
     'vacation',
     'holiday',
-    'ooo',
     'time off',
     'out of office',
+    /\booo\b/gim,
     /i(am|’m|'m') (off|out) (next|from) (\w+-\w+|\w+)(\sto\s\w+)?/gim,
     /(i|we)(\swill|'ll|’ll) be (out|off) (most of the|next) (day|week|month|year|time|couple of days)/gim,
     /(i|we)(\swill|'ll|’ll) be (out|off) (the day after\s)?tomorrow/gim,
