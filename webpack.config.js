@@ -1,4 +1,5 @@
 const path = require('path')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './dashboard/dashboard.html',
@@ -26,8 +27,14 @@ module.exports = {
             presets: ['env', 'react', 'es2015']
           }
         }
-      }
+      }, {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({ use: 'css-loader' })
+      },
     ]
   },
-  plugins: [HtmlWebpackPluginConfig]
+  plugins: [
+    HtmlWebpackPluginConfig,
+    new ExtractTextPlugin("styles.css"),
+  ]
 };
