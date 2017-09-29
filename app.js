@@ -24,8 +24,9 @@ async function setupTeams() {
   await storeHandler.init()
   await storeHandler.setupDevTeam()
   const tokens = await storeHandler.getAllTokens()
+
   botHandler.resumeAllConnections(tokens)
-  const phrases = [
+  const vacationRequestPhrases = [
     'vacation',
     'holiday',
     'time off',
@@ -37,11 +38,21 @@ async function setupTeams() {
     /(i|we)(\swill|'ll|’ll) be (out|off) in (\w+|\d+) days/gim,
     /(i|we)(\swill|'ll|’ll|\sneed to) take (some|a) time off/gim,
   ]
-  botHandler.listener.hears(phrases, ['ambient'], (bot, message) => {
+
+  const listOffPeoplePhrases = [
+    /(who's|who`s|whos|who is) (off|on vacation) (today)?/,
+  ]
+
+  botHandler.listener.hears(vacationRequestPhrases, ['ambient'], (bot, message) => {
     botHandler.startVacationRequestConversation(bot, message.user)
     botHandler.markMessageWithEmoji(bot, message)
   })
+
   botHandler.listener.hears('@', ['ambient'], (bot, message) => {
     vacationManager.handleUserMention(message)
+  })
+
+  botHandler.listener.hears(listOffPeoplePhrases, ['ambient'], (bot, message) => {
+    botHandler.startListOffPeopleConversation(bot, message)
   })
 }
