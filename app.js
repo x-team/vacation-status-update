@@ -53,6 +53,6 @@ async function setupTeams() {
   })
 
   botHandler.listener.hears(listOffPeoplePhrases, ['ambient'], (bot, message) => {
-    botHandler.startListOffPeopleConversation(bot, message.user)
+    botHandler.startListOffPeopleConversation(bot, message)
   })
 }

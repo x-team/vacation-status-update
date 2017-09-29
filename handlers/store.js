@@ -191,8 +191,27 @@ const filterUsersOnVacation = async (users, team) => {
 const getAllTeamsWithUsersOnVacation = () =>
   teamsOnVacation = firebase.database().ref(VACATION_LIST).once('value').then(snap => snap.val())
 
-const getAllUsersOnVacation = () =>
-  firebase.database().ref(VACATION_DATES_ENDPOINT).once('value').then(snap => snap.val())
+const getAllUsersOnVacationByDate = (date, token) =>
+  firebase.database().ref(VACATION_USER_DETAILS).once('value').then(async snap => {
+    const users = snap.val()
+    const filteredUsers = []
+
+    for (let user in users) {
+      const startDate = new Date(users[user][0].startDate.fancy)
+      const endDate = new Date(users[user][0].endDate.fancy)
+
+      if (startDate.getTime() < date && endDate.getTime() > date) {
+        const userData = await apiHandler.getUserData(token, user)
+        filteredUsers.push(`@${userData.real_name}`)
+      }
+    }
+
+    if (filteredUsers.length === 0) {
+      return 'No one is OOO then'
+    }
+
+    return filteredUsers;
+  })
 
 const checkIsUserOnVacation = (user, team) =>
   firebase.database().ref(`${VACATION_LIST}/${team}/${user}`).once('value').then(snap => snap.val())
@@ -220,7 +239,7 @@ export {
   getAllTokens,
   getTeamApiToken,
   getUserTeamId,
-  getAllUsersOnVacation,
+  getAllUsersOnVacationByDate,
   setupDevTeam,
   storeChannelNotificationInfo,
   getUserVacationDetails,

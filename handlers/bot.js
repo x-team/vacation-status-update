@@ -37,26 +37,6 @@ const handleStartDateAnswer = (response, convo) => {
   }
 }
 
-const handleVacationDate = (response, convo) => {
-  const isValidDate = dateUtil.validate(response.text)
-  if (isValidDate) {
-    const vacationDate = dateUtil.guessDate(response.text)
-    convo.setVar('vacationDate', vacationDate)
-    convo.gotoThread('get_off_people_by_date')
-  } else if (response.text.toLowerCase() === 'today') {
-    const today = new Date();
-    convo.setVar('vacationDate', {
-      day: today.getDate(),
-      month: today.getMonth() + 1,
-      year: today.getFullYear(),
-      fancy: date.toDateString()
-    })
-    convo.gotoThread('get_off_people_by_date')
-  } else {
-    convo.gotoThread('remind_end_date_format')
-  }
-}
-
 const handleEndDateAnswer = (response, convo) => {
   const isValidDate = dateUtil.validate(response.text)
   if (isValidDate) {
@@ -252,16 +232,32 @@ const startVacationRequestConversation = (bot, user) => {
   })
 }
 
-const startListOffPeopleConversation = (bot, user) => {
-  bot.startPrivateConversation({user: user}, (err, convo) => {
+const startListOffPeopleConversation = (bot, message) => {
+  bot.startPrivateConversation({ user: message.user }, (err, convo) => {
     convo.addMessage({
       text: 'Oh, ok :slightly_smiling_face: Thought I\'d check just in case! Just a heads up, you can always message me when you set your vacation plans, and I will update your profile name for you so people know you are away when they try to message you :slightly_smiling_face:',
     },'no_thread')
 
-    convo.addQuestion(`Which day interests you? (Use the format: ${dateUtil.FORMAT}) You can also say 'today' to see who's off today.`,[
+    convo.addMessage({
+      text: 'People on OOO: {{vars.vacationers}}'
+    }, 'response')
+
+    convo.addQuestion(`Which day interests you? (Use the format: ${dateUtil.FORMAT}) You can also say 'today' to see who's off today.`, [
       {
         default: true,
-        callback: (response, convo) => { handleVacationDate(response, convo) }
+        callback: async (response, convo) => {
+          let parsedDate;
+          if (response.text.toLowerCase() === 'today') {
+            parsedDate = new Date();
+          } else {
+            parsedDate = new Date(response.text);
+          }
+
+          const token = await storeHandler.getBotToken(message.team)
+          const users = await storeHandler.getAllUsersOnVacationByDate(parsedDate, token);
+          convo.setVar('vacationers', users);
+          convo.gotoThread('response')
+        }
       }
     ], {}, 'yes_thread')
 
@@ -276,10 +272,6 @@ const startListOffPeopleConversation = (bot, user) => {
       {
         pattern: bot.utterances.yes,
         callback: (response, convo) => {
-          storeHandler.getAllUsersOnVacation().then((data) => {
-            console.log(data)
-          })
-
           convo.gotoThread('yes_thread')
         },
       },
