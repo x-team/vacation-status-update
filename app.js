@@ -40,7 +40,7 @@ async function setupTeams() {
   ]
 
   const listOffPeoplePhrases = [
-    /(who's|who`s|whos|who is) (off|on vacation) (today)?/,
+    /(who's|who`s|whos|who is) (off|on vacation)/,
   ]
 
   botHandler.listener.hears(vacationRequestPhrases, ['ambient'], (bot, message) => {
@@ -52,7 +52,7 @@ async function setupTeams() {
     vacationManager.handleUserMention(message)
   })
 
-  botHandler.listener.hears(listOffPeoplePhrases, ['ambient'], (bot, message) => {
+  botHandler.listener.hears(listOffPeoplePhrases, ['direct_message', 'direct_mention'], (bot, message) => {
     botHandler.startListOffPeopleConversation(bot, message)
   })
 }
