@@ -202,7 +202,7 @@ const startVacationRequestConversation = (bot, user) => {
           convo.gotoThread('do_you_want_to_try_again')
         }
       }
-    ],{},'thanks')
+    ], {}, 'thanks')
 
     convo.addMessage({
         text: 'Can you rephrase?',
@@ -214,41 +214,82 @@ const startVacationRequestConversation = (bot, user) => {
     },'end')
 
     convo.ask('Heya! VacationBot here, did I hear you say you\'re going on vacation?', [
-        {
-            pattern: bot.utterances.yes,
-            callback: (response, convo) => {
-              convo.gotoThread('yes_thread')
-            },
+      {
+        pattern: bot.utterances.yes,
+        callback: (response, convo) => {
+          convo.gotoThread('yes_thread')
         },
-        {
-            pattern: bot.utterances.no,
-            callback: (response, convo) => {
-              convo.gotoThread('no_thread')
-            },
+      },
+      {
+        pattern: bot.utterances.no,
+        callback: (response, convo) => {
+          convo.gotoThread('no_thread')
         },
-        {
-            pattern: 'test',
-            callback: (response, convo) => {
-              storeHandler.storeVacationInfo(
-                {
-                  userId: response.user,
-                  teamId: response.team
-                },
-                dateUtil.getTodayDateObject(),
-                dateUtil.getTodayDateObject()
-              )
-              convo.gotoThread('should_notify_channel')
+      },
+      {
+        pattern: 'test',
+        callback: (response, convo) => {
+          storeHandler.storeVacationInfo(
+            {
+              userId: response.user,
+              teamId: response.team
             },
+            dateUtil.getTodayDateObject(),
+            dateUtil.getTodayDateObject()
+          )
+          convo.gotoThread('should_notify_channel')
         },
-        {
-            default: true,
-            callback: (response, convo) => {
-              convo.gotoThread('bad_response')
-            },
-        }
+      },
+      {
+        default: true,
+        callback: (response, convo) => {
+          convo.gotoThread('bad_response')
+        },
+      }
     ]);
 
     convo.activate()
+  })
+}
+
+const startListOffPeopleConversation = (bot, user) => {
+  bot.startPrivateConversation({user: user}, (err, convo) => {
+    convo.addMessage({
+      text: 'Oh, ok :slightly_smiling_face: Thought I\'d check just in case! Just a heads up, you can always message me when you set your vacation plans, and I will update your profile name for you so people know you are away when they try to message you :slightly_smiling_face:',
+    },'no_thread')
+
+    convo.addQuestion(`Which day interests you? (Use the format: ${dateUtil.FORMAT}) You can also say 'today' to see who's off today.`,[
+      {
+        default: true,
+        callback: (response, convo) => { handleVacationDate(response, convo) }
+      }
+    ], {}, 'yes_thread')
+
+    convo.addQuestion(`Please provide the date in format ${dateUtil.FORMAT} or just type 'today'`,[
+      {
+        default: true,
+        callback: (response, convo) => { handleVacationDate(response, convo) }
+      }
+    ], {}, 'remind_start_date_format')
+
+    convo.ask('Heya! VacationBot here, did I hear you say you want to see people currently on vacation?', [
+      {
+        pattern: bot.utterances.yes,
+        callback: (response, convo) => {
+          storeHandler.getAllUsersOnVacation().then((data) => {
+            console.log(data)
+          })
+
+          convo.gotoThread('yes_thread')
+        },
+      },
+      {
+        pattern: bot.utterances.no,
+        callback: (response, convo) => {
+          convo.gotoThread('no_thread')
+        },
+      },
+    ]);
   })
 }
 
@@ -313,6 +354,7 @@ const sendPostInstallMessage = async (bot, user, team) => {
 export {
   listener,
   startVacationRequestConversation,
+  startListOffPeopleConversation,
   createNewBotConnection,
   resumeAllConnections,
   informUserAboutVacationStart,

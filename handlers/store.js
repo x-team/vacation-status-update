@@ -93,21 +93,18 @@ const getUserTeamId = (userId) =>
 const getUserVacationDetails = (userId) =>
   firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`).once('value').then(snap => snap.val())
 
-const getAllTokens = () => {
-  return new Promise((resolve, reject) => {
-    const teamsTokens = firebase.database().ref(VACATION_TOKENS)
-      teamsTokens.once('value', (snapshot) => {
-        let tokens = []
-        const snaps = snapshot.val()
-        for (var key in snaps) {
-          if (snaps.hasOwnProperty(key)) {
-            tokens.push({ token: snaps[key].bot.botToken, team: key })
-          }
+const getAllTokens = () =>
+  firebase.database().ref(VACATION_TOKENS).once('value')
+    .then(snapshot => {
+      const tokens = []
+      for (let key in snapshot.val()) {
+        if (snaps.hasOwnProperty(key)) {
+          tokens.push({ token: snaps[key].bot.botToken, team: key })
         }
-        resolve(tokens)
-    })
-  })
-}
+      }
+
+      return tokens
+    });
 
 const checkVacationStartToday = () => {
   return new Promise((resolve, reject) => {
