@@ -27,23 +27,27 @@ const init = () => {
 const storeVacationStart = (date, userId) => {
   const data = { user: userId, date: date, type: VACATION_START}
   const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+
   firebase.database().ref(ref).set(data)
 }
 
 const storeVacationEnd = (date, userId) => {
   const data = { user: userId, date: date, type: VACATION_END}
   const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
+
   firebase.database().ref(ref).set(data)
 }
 
 const storeVacationDetails = (userData, startDate, endDate, status) => {
   const data = {user: userData.userId, team: userData.teamId, startDate: startDate, endDate: endDate, status: status}
   const ref = `${VACATION_USER_DETAILS}/${userData.userId}/0`
+
   firebase.database().ref(ref).set(data)
 }
 
 const storeVacationInfo = (userData, startDate, endDate) => {
   const status = formatterUtil.formatStatus(endDate)
+
   storeVacationStart(startDate, userData.userId)
   storeVacationEnd(endDate, userData.userId)
   storeVacationDetails(userData, startDate, endDate, status)
@@ -51,11 +55,13 @@ const storeVacationInfo = (userData, startDate, endDate) => {
 
 const storeChannelNotificationInfo = (userId, channelId) => {
   const ref = `${VACATION_USER_DETAILS}/${userId}/0/channel`
+
   firebase.database().ref(ref).set({ id: channelId })
 }
 
 const storeListenerChannelId = (team, user, channel) => {
   const ref = `${CHANNELS}/${team}`
+
   firebase.database().ref(ref).set({ team, user, channel })
 }
 
@@ -63,51 +69,29 @@ const storeTeamToken = (token) => {
   const botData = { botToken: token.bot.bot_access_token, botUserId: token.bot.bot_user_id }
   const data = { teamId: token.team_id, bot: botData, token: token.access_token }
   const ref = `${VACATION_TOKENS}/${token.team_id}`
+
   firebase.database().ref(ref).set(data)
 }
 
 const setupDevTeam = async () => {
   const devBotData = await apiHandler.identifyDevBotData()
-  const botData = { bot_access_token: process.env.slack_bot_token, bot_user_id: devBotData.user_id}
-  const tokenData = { bot: botData, team_id: devBotData.team_id, access_token: process.env.slack_api_token}
+  const botData = { bot_access_token: process.env.slack_bot_token, bot_user_id: devBotData.user_id }
+  const tokenData = { bot: botData, team_id: devBotData.team_id, access_token: process.env.slack_api_token }
+
   storeTeamToken(tokenData)
 }
 
-const getTeamApiToken = (teamId) => {
-  return new Promise((resolve, reject) => {
-    const tokens = firebase.database().ref(`${VACATION_TOKENS}/${teamId}`)
-      tokens.on('value', (snapshot) => {
-        resolve(snapshot.val().token)
-    })
-  })
-}
+const getTeamApiToken = (teamId) =>
+  firebase.database().ref(`${VACATION_TOKENS}/${teamId}`).once('value').then(snap => snap.val().token)
 
-const getBotToken = (teamId) => {
-  return new Promise((resolve, reject) => {
-    const tokens = firebase.database().ref(`${VACATION_TOKENS}/${teamId}`)
-      tokens.on('value', (snapshot) => {
-        resolve(snapshot.val().bot.botToken)
-    })
-  })
-}
+const getBotToken = (teamId) =>
+  firebase.database().ref(`${VACATION_TOKENS}/${teamId}`).once('value').then(snap => snap.val().bot.botToken)
 
-const getUserTeamId = (userId) => {
-  return new Promise((resolve, reject) => {
-    const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)
-      tokens.on('value', (snapshot) => {
-        resolve(snapshot.val().team)
-    })
-  })
-}
+const getUserTeamId = (userId) =>
+  firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`).then(snap => snap.val().team)
 
-const getUserVacationDetails = (userId) => {
-  return new Promise((resolve, reject) => {
-    const tokens = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`)
-      tokens.on('value', (snapshot) => {
-        resolve(snapshot.val())
-    })
-  })
-}
+const getUserVacationDetails = (userId) =>
+  firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`).once('value').then(snap => snap.val())
 
 const getAllTokens = () => {
   return new Promise((resolve, reject) => {
@@ -161,29 +145,26 @@ const checkVacationEndToday = () => {
   })
 }
 
-const getVacationDetails = (userId) => {
-  return new Promise((resolve, reject) => {
-    const vacationDetails = firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}`)
-      vacationDetails.on('value', (snapshot) => {
-        resolve(snapshot.val())
-    })
-  })
-}
+const getVacationDetails = (userId) =>
+  firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}`).once('value').then(snap => snap.val())
 
 const setVacationDetailsStarted = (userId, vacationDetails) => {
   vacationDetails.vacationStarted = true
   vacationDetails.vacationStartedAt = new Date().toJSON()
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+
   firebase.database().ref(ref).set(vacationDetails)
 }
 
 const addToOnVacationList = (userId, vacationDetails) => {
   const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+
   firebase.database().ref(ref).set({ onVacation: true })
 }
 
 const removeFromOnVacationsList = (userId, vacationDetails) => {
   const ref = `${VACATION_LIST}/${vacationDetails.team}/${userId}`
+
   firebase.database().ref(ref).remove()
 }
 
@@ -191,6 +172,7 @@ const setVacationDetailsEnded = (userId, vacationDetails) => {
   vacationDetails.vacationEnded = true
   vacationDetails.vacationEndedAt = new Date().toJSON()
   const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+
   firebase.database().ref(ref).set(vacationDetails)
 }
 
@@ -208,23 +190,14 @@ const filterUsersOnVacation = async (users, team) => {
   })
 }
 
-const getAllTeamsWithUsersOnVacation = () => {
-  return new Promise((resolve, reject) => {
-    const teamsOnVacation = firebase.database().ref(VACATION_LIST)
-      teamsOnVacation.on('value', (snapshot) => {
-        resolve(snapshot.val())
-    })
-  })
-}
+const getAllTeamsWithUsersOnVacation = () =>
+  teamsOnVacation = firebase.database().ref(VACATION_LIST).once('value').then(snap => snap.val())
 
-const checkIsUserOnVacation = (user, team) => {
-  return new Promise((resolve, reject) => {
-    const teamsOnVacation = firebase.database().ref(`${VACATION_LIST}/${team}/${user}`)
-      teamsOnVacation.on('value', (snapshot) => {
-        resolve(snapshot.val())
-    })
-  })
-}
+const getAllUsersOnVacation = () =>
+  firebase.database().ref(VACATION_DATES_ENDPOINT).once('value').then(snap => snap.val())
+
+const checkIsUserOnVacation = (user, team) =>
+  firebase.database().ref(`${VACATION_LIST}/${team}/${user}`).once('value').then(snap => snap.val())
 
 const cleanupStartDate = (userId) => {
   const date = dateUtil.getTodayDateObject()
@@ -249,6 +222,7 @@ export {
   getAllTokens,
   getTeamApiToken,
   getUserTeamId,
+  getAllUsersOnVacation,
   setupDevTeam,
   storeChannelNotificationInfo,
   getUserVacationDetails,
