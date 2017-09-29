@@ -37,6 +37,26 @@ const handleStartDateAnswer = (response, convo) => {
   }
 }
 
+const handleVacationDate = (response, convo) => {
+  const isValidDate = dateUtil.validate(response.text)
+  if (isValidDate) {
+    const vacationDate = dateUtil.guessDate(response.text)
+    convo.setVar('vacationDate', vacationDate)
+    convo.gotoThread('get_off_people_by_date')
+  } else if (response.text.toLowerCase() === 'today') {
+    const today = new Date();
+    convo.setVar('vacationDate', {
+      day: today.getDate(),
+      month: today.getMonth() + 1,
+      year: today.getFullYear(),
+      fancy: date.toDateString()
+    })
+    convo.gotoThread('get_off_people_by_date')
+  } else {
+    convo.gotoThread('remind_end_date_format')
+  }
+}
+
 const handleEndDateAnswer = (response, convo) => {
   const isValidDate = dateUtil.validate(response.text)
   if (isValidDate) {
