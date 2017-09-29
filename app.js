@@ -40,7 +40,7 @@ async function setupTeams() {
   ]
 
   const listOffPeoplePhrases = [
-    /(who's|who`s|whos|who is) (off|on vacation)/,
+    /(who's|who`s|whos|who is) (off|on vacation) (today)?/,
   ]
 
   botHandler.listener.hears(vacationRequestPhrases, ['ambient'], (bot, message) => {
