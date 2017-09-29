@@ -97,7 +97,8 @@ const getAllTokens = () =>
   firebase.database().ref(VACATION_TOKENS).once('value')
     .then(snapshot => {
       const tokens = []
-      for (let key in snapshot.val()) {
+      const snaps = snapshot.val()
+      for (let key in snaps) {
         if (snaps.hasOwnProperty(key)) {
           tokens.push({ token: snaps[key].bot.botToken, team: key })
         }
