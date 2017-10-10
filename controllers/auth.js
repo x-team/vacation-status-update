@@ -6,18 +6,18 @@ import { createNewBotConnection, sendPostInstallMessage } from '../handlers/bot'
 const router = new express.Router()
 
 router.get('/auth', async (req, res) => {
-  try {
-    const token = await exchangeCodeForToken(req.query.code)
-    storeTeamToken(token)
-    const bot = createNewBotConnection({
-      token: token.bot.bot_access_token,
-      team: token.team_id
-    })
-    sendPostInstallMessage(bot, token.user_id, token.team_id)
-    res.send('Thank you for authorizing our application')
-  } catch (e) {
-    res.send('Error. Invalid/expired code.')
-  }
+    try {
+        const token = await exchangeCodeForToken(req.query.code)
+        storeTeamToken(token)
+        const bot = createNewBotConnection({
+            token: token.bot.bot_access_token,
+            team: token.team_id
+        })
+        sendPostInstallMessage(bot, token.user_id, token.team_id)
+        res.send('Thank you for authorizing our application')
+    } catch (e) {
+        res.send('Error. Invalid/expired code.')
+    }
 })
 
 export default router
