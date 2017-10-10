@@ -1,17 +1,17 @@
 const formatStatus = (endDate) => {
-  return `OOO until ${endDate.fancy}`
+    return `OOO until ${endDate.fancy}`
 }
 
 const formatChannelsToOptions = (channels) => {
-  let options = []
-  channels.forEach((channel) => {
-    options.push({text: channel.name, value: channel.id})
-  })
+    let options = []
+    channels.forEach((channel) => {
+        options.push({text: channel.name, value: channel.id})
+    })
 
-  return options
+    return options
 }
 
 export {
-  formatStatus,
-  formatChannelsToOptions,
+    formatStatus,
+    formatChannelsToOptions,
 }
