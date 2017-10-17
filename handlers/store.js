@@ -31,11 +31,23 @@ const storeVacationStart = (date, userId) => {
     firebase.database().ref(ref).set(data)
 }
 
+const removeVacationStart = (date, userId) => {
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+
+  firebase.database().ref(ref).remove()
+}
+
 const storeVacationEnd = (date, userId) => {
     const data = { user: userId, date: date, type: VACATION_END}
     const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
 
     firebase.database().ref(ref).set(data)
+}
+
+const removeVacationEnd = (date, userId) => {
+    const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
+
+    firebase.database().ref(ref).remove()
 }
 
 const storeVacationDetails = (userData, startDate, endDate, status) => {
@@ -45,9 +57,16 @@ const storeVacationDetails = (userData, startDate, endDate, status) => {
     firebase.database().ref(ref).set(data)
 }
 
+const removeVacationDetails = (userId) => {
+    const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+
+    firebase.database().ref(ref).remove()
+}
+
 const storeVacationInfo = (userData, startDate, endDate) => {
     const status = formatterUtil.formatStatus(endDate)
 
+    removeAllPreviousVacations(userData.userId)
     storeVacationStart(startDate, userData.userId)
     storeVacationEnd(endDate, userData.userId)
     storeVacationDetails(userData, startDate, endDate, status)
@@ -188,7 +207,7 @@ const filterUsersOnVacation = async (users, team) => {
     })
 }
 
-const getAllTeamsWithUsersOnVacation = () => 
+const getAllTeamsWithUsersOnVacation = () =>
     firebase.database().ref(VACATION_LIST).once('value').then(snap => snap.val())
 
 const getAllUsersOnVacationByDate = (date, token) =>
@@ -226,6 +245,16 @@ const cleanupEndDate = (userId) => {
     const date = dateUtil.getTodayDateObject()
     const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
     firebase.database().ref(ref).remove()
+}
+
+const removeAllPreviousVacations = (userId) => {
+  getVacationDetails(userId).then(vacationDetails => {
+    if (vacationDetails && vacationDetails[0]) {
+      removeVacationStart(vacationDetails[0].startDate, userId)
+      removeVacationEnd(vacationDetails[0].endDate, userId)
+      removeVacationDetails(userId)
+    }
+  })
 }
 
 export {
