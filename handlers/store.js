@@ -249,10 +249,12 @@ const cleanupEndDate = (userId) => {
 
 const removeAllPreviousVacations = (userId) => {
   getVacationDetails(userId).then(vacationDetails => {
-    if (vacationDetails && vacationDetails[0]) {
-      removeVacationStart(vacationDetails[0].startDate, userId)
-      removeVacationEnd(vacationDetails[0].endDate, userId)
-      removeVacationDetails(userId)
+    if (vacationDetails) {
+      vacationDetails.forEach((vacationDetail) => {
+        removeVacationStart(vacationDetail.startDate, userId)
+        removeVacationEnd(vacationDetail.endDate, userId)
+        removeVacationDetails(userId)
+      })
     }
   })
 }
