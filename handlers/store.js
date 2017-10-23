@@ -107,9 +107,6 @@ const getTeamApiToken = (teamId) =>
 const getBotToken = (teamId) =>
     firebase.database().ref(`${VACATION_TOKENS}/${teamId}`).once('value').then(snap => snap.val().bot.botToken)
 
-const getUserTeamId = (userId) =>
-    firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`).then(snap => snap.val().team)
-
 const getUserVacationDetails = (userId) =>
     firebase.database().ref(`${VACATION_USER_DETAILS}/${userId}/0`).once('value').then(snap => snap.val())
 
@@ -208,9 +205,6 @@ const filterUsersOnVacation = async (users, team) => {
     })
 }
 
-const getAllTeamsWithUsersOnVacation = () =>
-    firebase.database().ref(VACATION_LIST).once('value').then(snap => snap.val())
-
 const getAllUsersOnVacationByDate = (date, token) =>
     firebase.database().ref(VACATION_USER_DETAILS).once('value').then(async snap => {
         const users = snap.val()
@@ -269,7 +263,6 @@ export {
     storeTeamToken,
     getAllTokens,
     getTeamApiToken,
-    getUserTeamId,
     getAllUsersOnVacationByDate,
     setupDevTeam,
     storeChannelNotificationInfo,
@@ -279,7 +272,6 @@ export {
     filterUsersOnVacation,
     addToOnVacationList,
     removeFromOnVacationsList,
-    getAllTeamsWithUsersOnVacation,
     cleanupStartDate,
     cleanupEndDate,
     storeListenerChannelId,
