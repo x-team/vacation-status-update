@@ -5,7 +5,7 @@ import * as messageUtil from '../util/message'
 
 const userStartVacation = async function(user) {
     let vacationDetails = await storeHandler.getVacationDetails(user.userId)
-    if (!vacationDetails[0].vacationStarted) {
+    if (vacationDetails && vacationDetails[0] && !vacationDetails[0].vacationStarted) {
         let token = await storeHandler.getTeamApiToken(vacationDetails[0].team)
         await apiHandler.changeUserProfile(
             token,

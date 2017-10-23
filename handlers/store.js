@@ -31,11 +31,23 @@ const storeVacationStart = (date, userId) => {
     firebase.database().ref(ref).set(data)
 }
 
+const removeVacationStart = (date, userId) => {
+  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+
+  firebase.database().ref(ref).remove()
+}
+
 const storeVacationEnd = (date, userId) => {
     const data = { user: userId, date: date, type: VACATION_END}
     const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
 
     firebase.database().ref(ref).set(data)
+}
+
+const removeVacationEnd = (date, userId) => {
+    const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
+
+    firebase.database().ref(ref).remove()
 }
 
 const storeVacationDetails = (userData, startDate, endDate, status) => {
@@ -45,12 +57,20 @@ const storeVacationDetails = (userData, startDate, endDate, status) => {
     firebase.database().ref(ref).set(data)
 }
 
+const removeVacationDetails = (userId) => {
+    const ref = `${VACATION_USER_DETAILS}/${userId}/0`
+
+    firebase.database().ref(ref).remove()
+}
+
 const storeVacationInfo = (userData, startDate, endDate) => {
     const status = formatterUtil.formatStatus(endDate)
 
-    storeVacationStart(startDate, userData.userId)
-    storeVacationEnd(endDate, userData.userId)
-    storeVacationDetails(userData, startDate, endDate, status)
+    removeAllPreviousVacations(userData.userId).then(() => {
+      storeVacationStart(startDate, userData.userId)
+      storeVacationEnd(endDate, userData.userId)
+      storeVacationDetails(userData, startDate, endDate, status)
+    })
 }
 
 const storeChannelNotificationInfo = (userId, channelId) => {
@@ -220,6 +240,17 @@ const cleanupEndDate = (userId) => {
     const date = dateUtil.getTodayDateObject()
     const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_END}/${userId}`
     firebase.database().ref(ref).remove()
+}
+
+const removeAllPreviousVacations = async (userId) => {
+  const vacationDetails = await getVacationDetails(userId)
+  if (vacationDetails) {
+    vacationDetails.forEach((vacationDetail) => {
+      removeVacationStart(vacationDetail.startDate, userId)
+      removeVacationEnd(vacationDetail.endDate, userId)
+      removeVacationDetails(userId)
+    })
+  }
 }
 
 export {
