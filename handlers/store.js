@@ -32,9 +32,9 @@ const storeVacationStart = (date, userId) => {
 }
 
 const removeVacationStart = (date, userId) => {
-  const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
+    const ref = `${VACATION_DATES_ENDPOINT}/${date.year}/${date.month}/${date.day}/${VACATION_START}/${userId}`
 
-  firebase.database().ref(ref).remove()
+    firebase.database().ref(ref).remove()
 }
 
 const storeVacationEnd = (date, userId) => {
@@ -67,9 +67,9 @@ const storeVacationInfo = (userData, startDate, endDate) => {
     const status = formatterUtil.formatStatus(endDate)
 
     removeAllPreviousVacations(userData.userId).then(() => {
-      storeVacationStart(startDate, userData.userId)
-      storeVacationEnd(endDate, userData.userId)
-      storeVacationDetails(userData, startDate, endDate, status)
+        storeVacationStart(startDate, userData.userId)
+        storeVacationEnd(endDate, userData.userId)
+        storeVacationDetails(userData, startDate, endDate, status)
     })
 }
 
@@ -243,14 +243,14 @@ const cleanupEndDate = (userId) => {
 }
 
 const removeAllPreviousVacations = async (userId) => {
-  const vacationDetails = await getVacationDetails(userId)
-  if (vacationDetails) {
-    vacationDetails.forEach((vacationDetail) => {
-      removeVacationStart(vacationDetail.startDate, userId)
-      removeVacationEnd(vacationDetail.endDate, userId)
-      removeVacationDetails(userId)
-    })
-  }
+    const vacationDetails = await getVacationDetails(userId)
+    if (vacationDetails) {
+        vacationDetails.forEach((vacationDetail) => {
+            removeVacationStart(vacationDetail.startDate, userId)
+            removeVacationEnd(vacationDetail.endDate, userId)
+            removeVacationDetails(userId)
+        })
+    }
 }
 
 export {
