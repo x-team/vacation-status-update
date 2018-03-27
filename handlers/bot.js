@@ -168,7 +168,7 @@ const startVacationRequestConversation = (bot, user) => {
             text: 'Oh, ok :slightly_smiling_face: Thought I\'d check just in case! Just a heads up, you can always message me when you set your vacation plans, and I will update your profile name for you so people know you are away when they try to message you :slightly_smiling_face:',
         }, 'no_thread')
 
-        convo.addQuestion('Bingo! Got it. I will remind the team that your vacation will take place between {{vars.startDate.fancy}} and {{vars.endDate.fancy}}. Is that alright?', [
+        convo.addQuestion('Bingo! Got it. I will remind the team that your first day of vacation will be {{vars.startDate.fancy}} and you will return on {{vars.endDate.fancy}}. Is that alright?', [
             {
                 pattern: bot.utterances.yes,
                 callback: async function(response, convo) {
